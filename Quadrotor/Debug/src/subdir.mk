@@ -4,13 +4,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Quadrotor.cpp 
+../src/GPScontrol.cpp \
+../src/Quadrotor.cpp \
+../src/Sensors.cpp \
+../src/Waypoint.cpp 
 
 OBJS += \
-./src/Quadrotor.o 
+./src/GPScontrol.o \
+./src/Quadrotor.o \
+./src/Sensors.o \
+./src/Waypoint.o 
 
 CPP_DEPS += \
-./src/Quadrotor.d 
+./src/GPScontrol.d \
+./src/Quadrotor.d \
+./src/Sensors.d \
+./src/Waypoint.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
