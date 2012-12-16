@@ -7,6 +7,7 @@
 //============================================================================
 
 #include <iostream>
+#include Quadrotor.h;
 using namespace std;
 
 int main() {
