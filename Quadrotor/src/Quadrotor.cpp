@@ -12,6 +12,6 @@ using namespace std;
 
 int main() {
 	cout << "Hello World" << endl; // prints
-	cout <<"Hello World 2"<< endl;
+
 	return 0;
 }
