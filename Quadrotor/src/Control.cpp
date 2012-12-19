@@ -16,22 +16,38 @@ Control::Control() {
 
 }
 
-void Control::updateCurrentValues(int XVelocity, int YVelocity, int ZVelocity,
-		int YawAngle) {
-	*currentX = XVelocity;
-	*currentY = YVelocity;
-	*currentZ = ZVelocity;
-	*currentYaw = YawAngle;
+void Control::updateCurrentVelocityValues(int XVelocity, int YVelocity,
+		int ZVelocity, int YawAngle) {
+	*currentXVelocity = XVelocity;
+	*currentYVelocity = YVelocity;
+	*currentZVelocity = ZVelocity;
+	*currentYawVelocity = YawAngle;
 }
-void Control::updateDirections(int requestedXVelocity, int requestedYVelocity,
-		int requestedZVelocity, int requestedYawAngle) {
-	*requestedX = requestedXVelocity;
-	*requestedY = requestedYVelocity;
-	*requestedZ = requestedZVelocity;
-	*requestedYaw = requestedYawAngle;
+void Control::updateDirections(int updatedXVelocity, int updatedYVelocity,
+		int updatedZVelocity, int updatedYawVelocity) {
+	*requestedXVelocity = updatedXVelocity;
+	*requestedYVelocity = updatedYVelocity;
+	*requestedZVelocity = updatedZVelocity;
+	*requestedYawVelocity = updatedYawVelocity;
+}
+void Control::updateCurrentAcclerationValues(int XAccleration, int YAccleration,
+		int ZAccleration, int YawAccleration) {
+	*currentXAcceloration = XAccleration;
+	*currentYAcceloration = YAccleration;
+	*currentZAcceloration = ZAccleration;
+	*currentYawAcceloration = YawAccleration;
 }
 
-void PID(double* setPoint, double* actualValue, double* previousError,
+void Control::updateRequestedAccleration(int updatedXAccleration,
+		int updatedYAccleration, int updatedZAccleration,
+		int updatedYawAccleration) {
+	*requestedXAcceloration = updatedXAccleration;
+	*requestedYAcceloration = updatedYAccleration;
+	*requestedZAcceloration = updatedZAccleration;
+	*requestedYawAcceloration = updatedYawAccleration;
+}
+
+void Control::PID(double* setPoint, double* actualValue, double* previousError,
 		double* integral, double* output, time_t* timestart) {
 
 	double error = *setPoint - *actualValue;
@@ -41,9 +57,9 @@ void PID(double* setPoint, double* actualValue, double* previousError,
 	timestart = &end;
 	*integral = *integral + error * timechange;
 	double derivitive = (error - *previousError) / timechange;
-	*output = Kp*error + Ki * *integral + Kd * derivitive;
+	*output = Kp * error + Ki * *integral + Kd * derivitive;
 	*previousError = error;
-	sleep(.01);
+	sleep(dt);
 
 }
 
