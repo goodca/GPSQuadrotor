@@ -57,7 +57,7 @@ void Control::PID(double* setPoint, double* actualValue, double* previousError,
 	timestart = &end;
 	*integral = *integral + error * timechange;
 	double derivitive = (error - *previousError) / timechange;
-	*output = Kp * error + Ki * *integral + Kd * derivitive;
+//	TODO:*output = Kp * error + Ki * *integral + Kd * derivitive;
 	*previousError = error;
 	sleep(dt);
 

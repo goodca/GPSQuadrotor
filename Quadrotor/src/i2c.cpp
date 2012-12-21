@@ -6,6 +6,7 @@
  */
 
 #include "i2c.h"
+#include <iostream>
 
 char *end;
 int res, i2cbus, address, size, file;
@@ -14,18 +15,19 @@ char filename[20];
 
 namespace std {
 
-i2c::i2c() {
+i2c::i2c(int i2cbus, int address) {
 	size = I2C_SMBUS_BYTE;
-
-	cout << "filename" + "i2cbus" << endl;
+	sprintf(filename, "/dev/i2c-%d", i2cbus);
+//	cout << "filename" << endl;
 	file = open(filename, O_RDWR);
+
 	if (file < 0) {
 		if (errno == ENOENT) {
-			cout <<  "Error: Could not open file, ENOENT" << endl;
+			cout << "Error: Could not open file, ENOENT" << endl;
 //			fprintf(stderr, "Error: Could not open file "
 //					"/dev/i2c-%d: %s\n", i2cbus, strerror(ENOENT));
 		} else {
-			cout <<  "Error: Could not open file, errno" << endl;
+			cout << "Error: Could not open file, errno" << endl;
 //			fprintf(stderr, "Error: Could not open file "
 //			"`%s': %s\n", filename, strerror(errno));
 			if (errno == EACCES)
@@ -47,22 +49,24 @@ i2c::i2c() {
 	 filename, daddress);
 	 }
 	 */
-	res = i2c_smbus_read_byte_data(file, daddress);
-	close(file);
+//
+//	res = i2c_smbus_read_byte_data(file, daddress);
+//
+//	if (res < 0) {
+//		fprintf(stderr, "Error: Read failed, res=%d\n", res);
+//		exit(2);
+//	}
+//	printf("i2c0x%02x (%d)\n", res, res);
+//	exit(0);
+	return;
+}
 
-	if (res < 0) {
-		fprintf(stderr, "Error: Read failed, res=%d\n", res);
-		exit(2);
-	}
-
-	printf("0x%02x (%d)\n", res, res);
-
-	exit(0);
-
+__u8 i2c::getByte(int dataAddress) {
+	return i2c_smbus_read_byte_data(file, daddress);
 }
 
 i2c::~i2c() {
-	// TODO Auto-generated destructor stub
+//	close(file);
 }
 
 } /* namespace std */

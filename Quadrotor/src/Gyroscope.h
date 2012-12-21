@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "i2c.h"
 
 namespace std {
 
@@ -21,22 +22,20 @@ public:
 	void update();
 	char updated;
 	void begin(void);
-	char read(char register_addr, char * value);
-	char write(char register_addr, char value);
-	char update(void);
+
 
 //Return the values in engineering units (degrees/second and degrees C)
-	float getX(void);
-	float getY(void);
-	float getZ(void);
-	float getTemp(void);
-	void update();
+	double getX(void);
+	double getY(void);
+	double getZ(void);
+	double getTemp(void);
 
 private:
 	int16_t temp;
-	int16_t x;
+	double x;
 	int16_t y;
 	int16_t z;
+	i2c *interface;
 	float xr;
 	float yr;
 	float zr;
