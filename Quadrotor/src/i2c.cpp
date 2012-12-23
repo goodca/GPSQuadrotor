@@ -10,7 +10,7 @@
 
 char *end;
 int res, i2cbus, address, size, file;
-int daddress;
+
 char filename[20];
 
 namespace std {
@@ -49,7 +49,7 @@ i2c::i2c(int i2cbus, int address) {
 	 filename, daddress);
 	 }
 	 */
-//
+
 //	res = i2c_smbus_read_byte_data(file, daddress);
 //
 //	if (res < 0) {
@@ -62,7 +62,12 @@ i2c::i2c(int i2cbus, int address) {
 }
 
 __u8 i2c::getByte(int dataAddress) {
-	return i2c_smbus_read_byte_data(file, daddress);
+	return i2c_smbus_read_byte_data(file, dataAddress);
+}
+
+void i2c::writeByte(__u8 dataAddress, __u8 byte){
+	i2c_smbus_write_byte_data(file, dataAddress, byte);
+	return;
 }
 
 i2c::~i2c() {

@@ -20,6 +20,7 @@ public:
 	Gyroscope();
 	virtual ~Gyroscope();
 	void update();
+	void init();
 	char updated;
 	void begin(void);
 
@@ -32,7 +33,7 @@ public:
 
 private:
 	int16_t temp;
-	double x;
+	int16_t x;
 	int16_t y;
 	int16_t z;
 	i2c *interface;

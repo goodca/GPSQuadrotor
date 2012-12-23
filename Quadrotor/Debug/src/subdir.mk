@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Accelerometer.cpp \
 ../src/Control.cpp \
 ../src/GPScontrol.cpp \
 ../src/Gyroscope.cpp \
@@ -14,6 +15,7 @@ CPP_SRCS += \
 ../src/i2c.cpp 
 
 OBJS += \
+./src/Accelerometer.o \
 ./src/Control.o \
 ./src/GPScontrol.o \
 ./src/Gyroscope.o \
@@ -24,6 +26,7 @@ OBJS += \
 ./src/i2c.o 
 
 CPP_DEPS += \
+./src/Accelerometer.d \
 ./src/Control.d \
 ./src/GPScontrol.d \
 ./src/Gyroscope.d \

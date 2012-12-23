@@ -39,6 +39,7 @@ public:
 	i2c(int i2cbus, int address);
 	virtual ~i2c();
 	__u8 getByte(int dataAddress);
+	void writeByte(__u8 dataAddress, __u8 byte);
 };
 
 struct i2c_msg {
