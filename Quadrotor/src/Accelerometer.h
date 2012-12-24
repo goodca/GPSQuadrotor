@@ -27,13 +27,14 @@ public:
 	double getRoll();
 
 private:
-	i2c *interface;
+	i2c *AccelInterface;
 	int16_t x;
 	int16_t y;
 	int16_t z;
 	float xg;
 	float yg;
 	float zg;
+	int file;
 
 };
 

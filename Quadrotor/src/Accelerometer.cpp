@@ -11,25 +11,33 @@ namespace std {
 
 Accelerometer::Accelerometer() {
 	// TODO Auto-generated constructor stub
+	return;
 
 }
 
 void Accelerometer::init() {
-	interface = new i2c(3, 0x53);
-	interface->writeByte(POWER_CTL, MEASURE);
-	interface->writeByte(DATA_FORMAT, RANGE_0);
+	printf("Initializing Accelerometer\n");
+	AccelInterface = new i2c(3, 0x53);
+	file = AccelInterface->getFile();
+
+	AccelInterface->writeByte(file, POWER_CTL, MEASURE);
+	AccelInterface->writeByte(file, DATA_FORMAT, RANGE_0);
+//	AccelInterface->setName('A');
+	return;
 }
 
 void Accelerometer::update() {
+//	printf("Accel I2C address: %d\n", AccelInterface->getAddress());
+	//this->AccelInterface->openFile();
+	x = (this->AccelInterface->getByte(file,DATAX1) << 8)
+			| this->AccelInterface->getByte(file,DATAX0);
 
-	x = (this->interface->getByte(DATAX1) << 8)
-			| this->interface->getByte(DATAX0);
+	y = (this->AccelInterface->getByte(file,DATAY1) << 8)
+			| this->AccelInterface->getByte(file,DATAY0);
 
-	y = (this->interface->getByte(DATAY1) << 8)
-			| this->interface->getByte(DATAY0);
-
-	z = (this->interface->getByte(DATAZ1) << 8)
-			| this->interface->getByte(DATAZ0);
+	z = (this->AccelInterface->getByte(file,DATAZ1) << 8)
+			| this->AccelInterface->getByte(file,DATAZ0);
+	return;
 }
 
 double Accelerometer::getX() {
@@ -45,7 +53,7 @@ double Accelerometer::getPitch() {
 	return atan(x / sqrt(y * y + z * z)) * 180 / 3.14159;
 }
 double Accelerometer::getRoll() {
-	return atan(y / sqrt(x * x + z * z)) * 180 / 3.14159;
+	return atan(-y / sqrt(x * x + z * z)) * 180 / 3.14159;
 }
 Accelerometer::~Accelerometer() {
 	// TODO Auto-generated destructor stub

@@ -8,6 +8,7 @@
 #ifndef GYROSCOPE_H_
 #define GYROSCOPE_H_
 
+#include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,17 +37,21 @@ private:
 	int16_t x;
 	int16_t y;
 	int16_t z;
-	i2c *interface;
-	float xr;
-	float yr;
-	float zr;
+	i2c *GyroInterface;
+	double xCorrected;
+	double yCorrected;
+	double zCorrected;
+
 	float tempr;
 	char value;
 	char _i2c_address;
+	int file;
 
 };
 
 extern Gyroscope gyro;
+
+#define GCORR 14.375
 
 /* ************************ Register map for the ITG3200 ****************************/
 #define ITG_ADDR 0xD0 //0xD0 if tied low, 0xD2 if tied high
@@ -97,7 +102,6 @@ extern Gyroscope gyro;
 #define INT_CFG_INT_ANYRD (1<<4)
 #define INT_CFG_ITG_RDY_EN (1<<2)
 #define INT_CFG_RAW_RDY_EN (1<<0)
-
 
 } /* namespace std */
 #endif /* GYROSCOPE_H_ */

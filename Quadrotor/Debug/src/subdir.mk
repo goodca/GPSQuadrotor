@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../src/Motor.cpp \
 ../src/Quadrotor.cpp \
 ../src/Sensors.cpp \
+../src/Thread.cpp \
 ../src/Waypoint.cpp \
 ../src/i2c.cpp 
 
@@ -22,6 +23,7 @@ OBJS += \
 ./src/Motor.o \
 ./src/Quadrotor.o \
 ./src/Sensors.o \
+./src/Thread.o \
 ./src/Waypoint.o \
 ./src/i2c.o 
 
@@ -33,6 +35,7 @@ CPP_DEPS += \
 ./src/Motor.d \
 ./src/Quadrotor.d \
 ./src/Sensors.d \
+./src/Thread.d \
 ./src/Waypoint.d \
 ./src/i2c.d 
 
