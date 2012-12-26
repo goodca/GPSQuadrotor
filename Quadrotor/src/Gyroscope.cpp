@@ -36,6 +36,13 @@ void Gyroscope::init() {
 
 //Select X gyro PLL for clock source
 	GyroInterface->writeByte(file, PWR_MGM, PWR_MGM_CLK_SEL_0);
+
+
+
+
+
+
+
 	return;
 }
 

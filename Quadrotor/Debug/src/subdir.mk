@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/Accelerometer.cpp \
 ../src/Control.cpp \
+../src/GPS.cpp \
 ../src/GPScontrol.cpp \
 ../src/Gyroscope.cpp \
 ../src/Motor.cpp \
@@ -18,6 +19,7 @@ CPP_SRCS += \
 OBJS += \
 ./src/Accelerometer.o \
 ./src/Control.o \
+./src/GPS.o \
 ./src/GPScontrol.o \
 ./src/Gyroscope.o \
 ./src/Motor.o \
@@ -30,6 +32,7 @@ OBJS += \
 CPP_DEPS += \
 ./src/Accelerometer.d \
 ./src/Control.d \
+./src/GPS.d \
 ./src/GPScontrol.d \
 ./src/Gyroscope.d \
 ./src/Motor.d \
