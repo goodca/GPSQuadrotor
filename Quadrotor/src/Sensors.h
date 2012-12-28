@@ -11,10 +11,13 @@
 #include "Gyroscope.h"
 #include "Accelerometer.h"
 #include "GPS.h"
+#include "Compass.h"
+#include "IMU.h"
 #include <iostream>
 #include <fcntl.h>      /*Enables use of flags to modify open(), read(), write() functions*/
 #include <unistd.h>     /*Enables use of open(), read(), write()*/
 #include <stdio.h>
+#include "Thread.h"
 
 namespace std {
 
@@ -24,18 +27,12 @@ public:
 	void runTest();
 	void update();
 	virtual ~Sensors();
-	void correctGyro();
+
 
 private:
+	Compass *comp;
 	GPS *gps;
-	Gyroscope *gyro;
-	Accelerometer *acel;
-	double xGyroCorrection; //the amount the gyro is thought to be off
-	double yGyroCorrection;
-	double zGyroCorrection;
-	double xInt;
-	double yInt;
-	double zInt;
+	IMU *imu;
 };
 
 } /* namespace std */

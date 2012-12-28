@@ -38,76 +38,69 @@ Thread::Thread() {
 
 }
 
-int launch_pthread( pthread_t *hThread_byref,
-                    int type,
-                    int priority,
-                    void *(*thread_fxn)(void *env),
-                    void *env )
-{
-    pthread_attr_t  threadAttrs;
-    struct sched_param threadParams;
-    int status = thread_SUCCESS;
+int launch_pthread(pthread_t *hThread_byref, int type, int priority,
+		void *(*thread_fxn)(void *env), void *env) {
+	pthread_attr_t threadAttrs;
+	struct sched_param threadParams;
+	int status = thread_SUCCESS;
 
-    /* Initialize thread attributes structures */
-    if( pthread_attr_init( &threadAttrs ) ) {
-        //ERR( "threadAttrs initialization failed\n" );
-        printf("threadAttrs initialization failed\n");
-    	status = EXIT_FAILURE;
-        goto cleanup;
-    }
+	/* Initialize thread attributes structures */
+	if (pthread_attr_init(&threadAttrs)) {
+		//ERR( "threadAttrs initialization failed\n" );
+		printf("threadAttrs initialization failed\n");
+		status = EXIT_FAILURE;
+		return status;
+	}
 
-    /* This library defaults to inherited scheduling characteristics!   */
-    /* If you don't set the inheritance, no changes will take place!    */
+	/* This library defaults to inherited scheduling characteristics!   */
+	/* If you don't set the inheritance, no changes will take place!    */
 
-    if( pthread_attr_setinheritsched( &threadAttrs, PTHREAD_EXPLICIT_SCHED ) ) {
-        //ERR( "audioThreadAttrs set scheduler inheritance failed\n" );
-        status = EXIT_FAILURE;
-        goto cleanup;
-    }
+	if (pthread_attr_setinheritsched(&threadAttrs, PTHREAD_EXPLICIT_SCHED)) {
+		//ERR( "audioThreadAttrs set scheduler inheritance failed\n" );
+		status = EXIT_FAILURE;
+		return status;
+	}
 
-    /* Setthread scheduling policy to real-time or time-slice           */
-    /* SCHED_RR available only to threads running as superuser          */
+	/* Setthread scheduling policy to real-time or time-slice           */
+	/* SCHED_RR available only to threads running as superuser          */
 
-    if(type == REALTIME) {
-        if( pthread_attr_setschedpolicy( &threadAttrs, SCHED_RR ) ) {
-            //ERR( "pthread_attr_setschedpolicy failed\n" );
-            printf("pthread attr setschedpolicy failed\n");
-        	status = EXIT_FAILURE;
-            goto cleanup;
-        }
-    } else {
-        if( pthread_attr_setschedpolicy( &threadAttrs, SCHED_OTHER ) ) {
+	if (type == REALTIME) {
+		if (pthread_attr_setschedpolicy(&threadAttrs, SCHED_RR)) {
+			//ERR( "pthread_attr_setschedpolicy failed\n" );
+			printf("pthread attr setschedpolicy failed\n");
+			status = EXIT_FAILURE;
+			return status;
+		}
+	} else {
+		if (pthread_attr_setschedpolicy(&threadAttrs, SCHED_OTHER)) {
 //            ERR( "pthread_attr_setschedpolicy failed\n" );
-            printf("pthread_attr setschedpolicy failed\n");
-        	status = EXIT_FAILURE;
-            goto cleanup;
-        }
-    }
+			printf("pthread_attr setschedpolicy failed\n");
+			status = EXIT_FAILURE;
+			return status;
+		}
+	}
 
-    /* Set thread priority */
-    threadParams.sched_priority = priority;
+	/* Set thread priority */
+	threadParams.sched_priority = priority;
 
-    if( pthread_attr_setschedparam( &threadAttrs, &threadParams ) ) {
+	if (pthread_attr_setschedparam(&threadAttrs, &threadParams)) {
 //        ERR( "pthread_attr_setschedparam failed\n" );
-        printf("pthread attr setschedparam failed\n");
+		printf("pthread attr setschedparam failed\n");
+		status = EXIT_FAILURE;
+		return status;
+	}
+
+	/*  Create the thread  */
+
+
+    if ( pthread_create(hThread_byref, &threadAttrs, thread_fxn, env ) ) {
+//        ERR( "Failed to create thread\n" );
+        printf("Failed to create thread\n");
     	status = EXIT_FAILURE;
-        goto cleanup;
+        return status;
     }
-
-    /*  Create the thread  */
-
-//    if ( pthread_create(hThread_byref, &threadAttrs, thread_fxn, env ) ) {
-////        ERR( "Failed to create thread\n" );
-//        printf("Failed to create thread\n");
-//    	status = EXIT_FAILURE;
-//        goto cleanup;
-//    }
-
-cleanup:
     return status;
-
 }
-
 
 Thread::~Thread() {
 	// TODO Auto-generated destructor stub

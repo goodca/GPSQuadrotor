@@ -29,25 +29,30 @@ void Accelerometer::init() {
 void Accelerometer::update() {
 //	printf("Accel I2C address: %d\n", AccelInterface->getAddress());
 	//this->AccelInterface->openFile();
-	x = (this->AccelInterface->getByte(file,DATAX1) << 8)
-			| this->AccelInterface->getByte(file,DATAX0);
-
-	y = (this->AccelInterface->getByte(file,DATAY1) << 8)
-			| this->AccelInterface->getByte(file,DATAY0);
-
-	z = (this->AccelInterface->getByte(file,DATAZ1) << 8)
-			| this->AccelInterface->getByte(file,DATAZ0);
+	x = (this->AccelInterface->getByte(file, DATAX1) << 8)
+			| this->AccelInterface->getByte(file, DATAX0);
+	xCorr = x * SCALE4G;
+	y = (this->AccelInterface->getByte(file, DATAY1) << 8)
+			| this->AccelInterface->getByte(file, DATAY0);
+	yCorr = y * SCALE4G;
+	z = (this->AccelInterface->getByte(file, DATAZ1) << 8)
+			| this->AccelInterface->getByte(file, DATAZ0);
+	zCorr = z * SCALE4G;
+	magnitude = sqrt(xCorr * xCorr + yCorr * yCorr + zCorr * zCorr);
 	return;
+}
+double Accelerometer::getMagnitude() {
+	return magnitude;
 }
 
 double Accelerometer::getX() {
-	return x * SCALE4G;
+	return xCorr;
 }
 double Accelerometer::getY() {
-	return y * SCALE4G;
+	return yCorr;
 }
 double Accelerometer::getZ() {
-	return z * SCALE4G;
+	return zCorr;
 }
 double Accelerometer::getPitch() {
 	return atan(x / sqrt(y * y + z * z)) * 180 / 3.14159;

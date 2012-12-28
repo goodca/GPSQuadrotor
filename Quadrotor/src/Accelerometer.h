@@ -22,6 +22,7 @@ public:
 	double getX(void);
 	double getY(void);
 	double getZ(void);
+	double getMagnitude();
 	void init();
 	double getPitch();
 	double getRoll();
@@ -31,9 +32,10 @@ private:
 	int16_t x;
 	int16_t y;
 	int16_t z;
-	float xg;
-	float yg;
-	float zg;
+	double xCorr;
+	double yCorr;
+	double zCorr;
+	double magnitude;
 	int file;
 
 };

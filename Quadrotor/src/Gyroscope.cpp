@@ -19,7 +19,7 @@ void Gyroscope::init() {
 	file = GyroInterface->getFile();
 	printf("Before reset: %x\n", GyroInterface->getByte(file, DLPF_FS));
 	GyroInterface->writeByte(file, PWR_MGM, PWR_MGM_H_RESET);
-	usleep(50000);
+	//usleep(50000);
 	printf("Before update: %x\n", GyroInterface->getByte(file, DLPF_FS));
 	//Set internal clock to 1kHz with 42Hz LPF and Full Scale to 3 for proper operation
 	GyroInterface->writeByte(file, DLPF_FS,
@@ -36,12 +36,6 @@ void Gyroscope::init() {
 
 //Select X gyro PLL for clock source
 	GyroInterface->writeByte(file, PWR_MGM, PWR_MGM_CLK_SEL_0);
-
-
-
-
-
-
 
 	return;
 }
