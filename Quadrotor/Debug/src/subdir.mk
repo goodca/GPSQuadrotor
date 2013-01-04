@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../src/Accelerometer.cpp \
 ../src/Compass.cpp \
 ../src/Control.cpp \
+../src/DM3730pwm.cpp \
 ../src/GPS.cpp \
 ../src/GPScontrol.cpp \
 ../src/Gyroscope.cpp \
@@ -14,14 +15,17 @@ CPP_SRCS += \
 ../src/Motor.cpp \
 ../src/Quadrotor.cpp \
 ../src/Sensors.cpp \
-../src/Thread.cpp \
 ../src/Waypoint.cpp \
 ../src/i2c.cpp 
+
+C_SRCS += \
+../src/quadthread.c 
 
 OBJS += \
 ./src/Accelerometer.o \
 ./src/Compass.o \
 ./src/Control.o \
+./src/DM3730pwm.o \
 ./src/GPS.o \
 ./src/GPScontrol.o \
 ./src/Gyroscope.o \
@@ -29,14 +33,18 @@ OBJS += \
 ./src/Motor.o \
 ./src/Quadrotor.o \
 ./src/Sensors.o \
-./src/Thread.o \
 ./src/Waypoint.o \
-./src/i2c.o 
+./src/i2c.o \
+./src/quadthread.o 
+
+C_DEPS += \
+./src/quadthread.d 
 
 CPP_DEPS += \
 ./src/Accelerometer.d \
 ./src/Compass.d \
 ./src/Control.d \
+./src/DM3730pwm.d \
 ./src/GPS.d \
 ./src/GPScontrol.d \
 ./src/Gyroscope.d \
@@ -44,7 +52,6 @@ CPP_DEPS += \
 ./src/Motor.d \
 ./src/Quadrotor.d \
 ./src/Sensors.d \
-./src/Thread.d \
 ./src/Waypoint.d \
 ./src/i2c.d 
 
@@ -53,7 +60,14 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -O0 -g3 -Wall -c -fmessage-length=0 -fpermissive -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	g++ -O0 -g3 -Wall -pthread -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/%.o: ../src/%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GCC C Compiler'
+	gcc -O0 -g3 -Wall -pthread -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

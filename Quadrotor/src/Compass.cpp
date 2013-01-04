@@ -46,6 +46,10 @@ double Compass::getY() {
 }
 
 double Compass::getZ() {
+	while(1){
+		printf("in compass getZ()\n");
+	}
+
 	return z;
 }
 
@@ -82,12 +86,9 @@ double Compass::tiltComponsation(double phi, double theta) {
 	return angle;
 }
 
-void * Compass::compassRun(void *p) {
-	while(1){
-		printf("compass\n");
-		usleep(250000);
-	}
-	return NULL;
+void Compass::startCompass(){
+	void *env;
+	pthread_create(&compassThread, 0, &Compass::start_thread, env);
 }
 
 Compass::~Compass() {

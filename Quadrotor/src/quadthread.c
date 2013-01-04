@@ -1,10 +1,11 @@
 /*
- * Thread.cpp
- *
- *  Created on: Dec 23, 2012
- *      Author: chris
+ *   thread.c
  */
 
+#include <stdio.h>                              //  Always include this header
+#include <stdlib.h>                             //  Always include this header
+#include <pthread.h>                            // posix thread definitions
+#include "quadthread.h"                             // header file for this module
 /**************************************************************************
  *  launch_pthread
  *  --------------
@@ -28,37 +29,27 @@
  *             thread.h
  **************************************************************************/
 
-#include "Thread.h"
-#include <pthread.h>
-
-namespace std {
-
-Thread::Thread() {
-	// TODO Auto-generated constructor stub
-
-}
-
 int launch_pthread(pthread_t *hThread_byref, int type, int priority,
 		void *(*thread_fxn)(void *env), void *env) {
+//	DBG( "IN thread.c----------------------\n" );
 	pthread_attr_t threadAttrs;
 	struct sched_param threadParams;
 	int status = thread_SUCCESS;
 
 	/* Initialize thread attributes structures */
 	if (pthread_attr_init(&threadAttrs)) {
-		//ERR( "threadAttrs initialization failed\n" );
-		printf("threadAttrs initialization failed\n");
+//        ERR( "threadAttrs initialization failed\n" );
 		status = EXIT_FAILURE;
-		return status;
+		goto cleanup;
 	}
 
 	/* This library defaults to inherited scheduling characteristics!   */
 	/* If you don't set the inheritance, no changes will take place!    */
 
 	if (pthread_attr_setinheritsched(&threadAttrs, PTHREAD_EXPLICIT_SCHED)) {
-		//ERR( "audioThreadAttrs set scheduler inheritance failed\n" );
+//        ERR( "audioThreadAttrs set scheduler inheritance failed\n" );
 		status = EXIT_FAILURE;
-		return status;
+		goto cleanup;
 	}
 
 	/* Setthread scheduling policy to real-time or time-slice           */
@@ -66,17 +57,15 @@ int launch_pthread(pthread_t *hThread_byref, int type, int priority,
 
 	if (type == REALTIME) {
 		if (pthread_attr_setschedpolicy(&threadAttrs, SCHED_RR)) {
-			//ERR( "pthread_attr_setschedpolicy failed\n" );
-			printf("pthread attr setschedpolicy failed\n");
+//            ERR( "pthread_attr_setschedpolicy failed\n" );
 			status = EXIT_FAILURE;
-			return status;
+			goto cleanup;
 		}
 	} else {
 		if (pthread_attr_setschedpolicy(&threadAttrs, SCHED_OTHER)) {
 //            ERR( "pthread_attr_setschedpolicy failed\n" );
-			printf("pthread_attr setschedpolicy failed\n");
 			status = EXIT_FAILURE;
-			return status;
+			goto cleanup;
 		}
 	}
 
@@ -85,25 +74,48 @@ int launch_pthread(pthread_t *hThread_byref, int type, int priority,
 
 	if (pthread_attr_setschedparam(&threadAttrs, &threadParams)) {
 //        ERR( "pthread_attr_setschedparam failed\n" );
-		printf("pthread attr setschedparam failed\n");
 		status = EXIT_FAILURE;
-		return status;
+		goto cleanup;
 	}
 
 	/*  Create the thread  */
-
-
-    if ( pthread_create(hThread_byref, &threadAttrs, thread_fxn, env ) ) {
+//	DBG( "CREATING THREAD----------------------\n" );
+	printf("about to launch thread\n");
+	if (pthread_create(hThread_byref, &threadAttrs, thread_fxn, env)) {
 //        ERR( "Failed to create thread\n" );
-        printf("Failed to create thread\n");
-    	status = EXIT_FAILURE;
-        return status;
-    }
-    return status;
+		status = EXIT_FAILURE;
+		goto cleanup;
+	}
+//	DBG( "END OF thread.c----------------------\n" );
+	cleanup: return status;
+
+}
+int launchThreads(void *envRef) {
+	int env = 0;
+
+	int successFirst = launch_pthread(&imuThread, TIMESLICE, 0, QuadthreadOne,
+			(void *) &env);
+	printf("success variable 1 is: %d\n", successFirst);
+	//	launch_pthread(&firstThread, TIMESLICE, 0, thread1, (void *) &env);
+//		int successSecond = launch_pthread(&compassThread, TIMESLICE, 0,
+//	QuadthreadTwo, (void *) &env);
+//	printf("success variable 2 is: %d\n", successSecond);
+
+	sleep(3);
+
+//		pthread_join(imuThread, (void **) &imuThreadReturn);
+//		pthread_join(compassThread, (void **) &compassThreadReturn);
+}
+int *QuadthreadOne(void *envByRef) {
+	while (1) {
+
+	}
+	return 1;
 }
 
-Thread::~Thread() {
-	// TODO Auto-generated destructor stub
+int *QuadthreadTwo(void *envByRef) {
+	while (1) {
+		printf("In thread 2\n\n");
+	}
+	return 0;
 }
-
-} /* namespace std */

@@ -8,6 +8,7 @@
 #include "Sensors.h"
 #include "IMU.h"
 
+
 namespace std {
 
 Sensors::Sensors() {
@@ -20,15 +21,27 @@ void Sensors::update() {
 }
 void Sensors::runTest() {
 	printf("Beginning test of sensors\n");
-	comp = new Compass;
-	comp->init();
-	printf("In Sensors, about to imu->init()\n");
+	imu = new IMU;
 	imu->init();
+	imu->update(); //while loop in there, won't return
+//	comp = new Compass;
+//	comp->init();
+//	printf("In Sensors, about to imu->init()\n");
+//	Gyroscope *gyro = new Gyroscope;
+//	gyro->init();
+//	gyro->update();
+//	Accelerometer *acel = new Accelerometer;
+//	acel->init();
+//	acel->update();
+//	imu->init();
 //	pthread_create(&imuThread, NULL, imuRun, (void *) &variable);
 
 //	gps = new GPS;
 //	gps->init();
 
+//	while (true){
+//		gps->getGPSData();
+//	}
 //	while (true) {
 //		comp->update();
 //		printf("X: %f\nY: %f\nZ: %f\n\n", comp->getX(), comp->getY(),
@@ -41,7 +54,18 @@ void Sensors::runTest() {
 
 //	int uToWait = 50000;
 //	int clkDiv = 0;
-//	printf("Starting loop:\n"return);
+//	int magnitude = 0;
+//	double xGyroAngle = 0;
+//	double yGyroAngle = 0;
+//	double zGyroAngle = 0;
+//	double xAcel;
+//	double yAcel;
+//	double zAcel;
+//	double zInt = 0;
+//	double yInt = 0;
+//	double xInt = 0;
+
+//	printf("Starting loop:\n");
 //	while (true) {
 ////		printf(" ");
 //		clkDiv++;

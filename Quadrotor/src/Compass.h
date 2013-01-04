@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include "i2c.h"
 #include <math.h>
+#include <pthread.h>
 
 namespace std {
 
@@ -28,14 +29,21 @@ public:
 	double getZ();
 	double tiltComponsation(double phi, double theta);
 	void * compassRun(void *p);
+	void startCompass();
 private:
-
+	pthread_t compassThread;
 	int compassFile;
 	i2c *compassInterface;
 	int16_t x;
 	int16_t y;
 	int16_t z;
 	double unWrap(double angle);
+
+	static void * start_thread(void *obj) {
+		//All we do here is call the do_work() function
+		printf("in start_thread\n");
+		reinterpret_cast<Compass *>(obj)->getZ();
+	}
 
 };
 #define MAG_DECLINATION 0; //in radians

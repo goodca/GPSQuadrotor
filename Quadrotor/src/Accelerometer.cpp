@@ -31,6 +31,7 @@ void Accelerometer::update() {
 	//this->AccelInterface->openFile();
 	x = (this->AccelInterface->getByte(file, DATAX1) << 8)
 			| this->AccelInterface->getByte(file, DATAX0);
+
 	xCorr = x * SCALE4G;
 	y = (this->AccelInterface->getByte(file, DATAY1) << 8)
 			| this->AccelInterface->getByte(file, DATAY0);
@@ -38,6 +39,7 @@ void Accelerometer::update() {
 	z = (this->AccelInterface->getByte(file, DATAZ1) << 8)
 			| this->AccelInterface->getByte(file, DATAZ0);
 	zCorr = z * SCALE4G;
+
 	magnitude = sqrt(xCorr * xCorr + yCorr * yCorr + zCorr * zCorr);
 	return;
 }

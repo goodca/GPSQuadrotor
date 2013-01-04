@@ -8,7 +8,7 @@
 #ifndef GYROSCOPE_H_
 #define GYROSCOPE_H_
 
-#include <iostream>
+//#include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,7 +49,7 @@ private:
 
 };
 
-extern Gyroscope gyro;
+//extern Gyroscope;
 
 #define GCORR 14.375
 

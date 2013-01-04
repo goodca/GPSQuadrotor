@@ -17,7 +17,7 @@
 #include <fcntl.h>      /*Enables use of flags to modify open(), read(), write() functions*/
 #include <unistd.h>     /*Enables use of open(), read(), write()*/
 #include <stdio.h>
-#include "Thread.h"
+
 
 namespace std {
 

@@ -8,15 +8,33 @@
 #include <iostream>
 #include "Gyroscope.h"
 #include "Accelerometer.h"
+#include "IMU.h"
 #include <math.h>
 #include "Sensors.h"
+extern "C" {
+#include "quadthread.h"
+#include <pthread.h>
+}
 
 using namespace std;
+
+pthread_t cppThread;
 
 int main() {
 	cout << "Hello World" << endl; // prints
 	Sensors *sense = new Sensors;
-	sense->runTest();
+	IMU *imu = new IMU;
+	Compass *compass = new Compass;
+//	sense->runTest();
+	void *env;
+
+	puts("In main"); /* prints Broked */
+//	launchThreads();
+	imu->startIMU();
+	compass->startCompass();
+//	pthread_create(&cppThread, 0, &start_thread, env);
+
+	sleep(5);
 
 	return 0;
 }
