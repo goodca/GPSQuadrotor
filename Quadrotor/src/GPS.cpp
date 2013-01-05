@@ -13,6 +13,34 @@ GPS::GPS() {
 	// TODO Auto-generated constructor stub
 
 }
+
+void GPS::startGPSThread() {
+	threadRunning = 1;
+
+	pthread_create(&gpsThread_t, 0, &GPS::start_thread, this);
+
+	return;
+}
+void GPS::gpsThread(void *obj) {
+	GPS *threadGPS = (GPS *) obj;
+	//All we do here is call the do_work() function
+
+	while (threadGPS->getThreadRunning()) {
+		printf("GPS looping\n");
+
+//		update();
+		usleep(500000);
+	}
+}
+
+int GPS::getThreadRunning() {
+	return threadRunning;
+}
+void GPS::stopThread(){
+	threadRunning = 0;
+	return;
+}
+
 void GPS::setMuxing() {
 	FILE* fp;
 	//open the export file for rxd

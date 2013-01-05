@@ -8,17 +8,53 @@
 #include "Sensors.h"
 #include "IMU.h"
 
-
 namespace std {
 
 Sensors::Sensors() {
 	// TODO Auto-generated constructor stub
 
 }
+void Sensors::startSensorsThreads() {
+	threadRunning = 1;
+	imu = new IMU;
+	imu->startIMUThread();
+	comp = new Compass;
+	comp->startCompassThread();
+	gps = new GPS;
+	gps->startGPSThread();
+
+
+
+	pthread_create(&sensorsThread_t, 0, &Sensors::start_thread, this);
+
+	return;
+}
+void Sensors::sensorsThread(void *obj) {
+	Sensors *threadSense = (Sensors *) obj;
+	//All we do here is call the do_work() function
+
+	while (threadSense->getThreadRunning()) {
+		printf("Sensors looping\n");
+
+//		update();
+		usleep(500000);
+	}
+}
 void Sensors::update() {
 
 	return;
 }
+int Sensors::getThreadRunning() {
+	return threadRunning;
+}
+void Sensors::stopThread(){
+	threadRunning = 0;
+	imu->stopThread();
+	comp->stopThread();
+	gps->stopThread();
+	return;
+}
+
 void Sensors::runTest() {
 	printf("Beginning test of sensors\n");
 	imu = new IMU;

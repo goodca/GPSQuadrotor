@@ -14,9 +14,25 @@ Compass::Compass() {
 	return;
 }
 
+void Compass::compassThread(void *obj) {
+	Compass *threadCompass = (Compass *) obj;
+	while(threadCompass->getThreadRunning()){
+		printf("Compass Running\n");
+		usleep(500000);
+	}
+	//TODO: join the thread
+	return;
+}
+double Compass::getThreadRunning(){
+	return threadRunning;
+}
+void Compass::stopThread(){
+	threadRunning = 0;
+}
+
 void Compass::init() {
 	printf("Initializing Compass\n");
-	compassInterface = new i2c(I2C_PORT, ADXL_ADDR);
+	compassInterface = new i2c(COMP_I2C_PORT, COMP_ADDR);
 	compassFile = compassInterface->getFile();
 //	compassInterface->writeByte(compassFile, CONFIG_REG_A, 0b00110000);
 //	compassInterface->writeByte(compassFile, CONFIG_REG_B, 0b00100000);
@@ -33,7 +49,6 @@ void Compass::update() {
 
 	z = (this->compassInterface->getByte(compassFile, Z_MSB) << 8)
 			| this->compassInterface->getByte(compassFile, Z_LSB);
-	return;
 	return;
 }
 
@@ -86,9 +101,9 @@ double Compass::tiltComponsation(double phi, double theta) {
 	return angle;
 }
 
-void Compass::startCompass(){
-	void *env;
-	pthread_create(&compassThread, 0, &Compass::start_thread, env);
+void Compass::startCompassThread(){
+	threadRunning = 1;
+	pthread_create(&compassThread_t, 0, &Compass::start_thread, this);
 }
 
 Compass::~Compass() {

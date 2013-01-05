@@ -16,7 +16,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-
 namespace std {
 
 class IMU {
@@ -32,11 +31,12 @@ public:
 	double getZAngle();
 	void correctGyro();
 	void update();
-	void startIMU();
+	void startIMUThread();
 
-
-	//static void imuRun(void *p);
+	int getThreadRunning();
+	void stopThread();
 private:
+	int threadRunning;
 	Accelerometer *acel;
 	Gyroscope *gyro;
 	double xGyroCorrection; //the amount the gyro is thought to be off
@@ -50,34 +50,13 @@ private:
 	double yVelocity;
 	double zVelocity;
 
-	pthread_t imuThread;
-	static void * start_thread(void *obj)
-	    {
-	        //All we do here is call the do_work() function
-			printf("in start_thread\n");
-	        reinterpret_cast<IMU *>(obj)->getZAngle();
-	    }
-
-
-//	static void start_thread(void *obj) {
-//		//All we do here is call the do_work() function
-//		printf("In start_thread\n");
-//		fflush(stdout);
-//
-//		reinterpret_cast<IMU *>(obj)->do_work();
-//	}
-//	void do_work() {
-//		printf("in do_work\n");
-//		fflush(stdout);
-//		while (true) {
-//			printf("IMU\n");
-//		}
-//	}
-
+	pthread_t imuThread_t;
+	void imuThread(void *obj);
+	static void * start_thread(void *obj) {
+		reinterpret_cast<IMU *>(obj)->imuThread(obj);
+		return 0;
+	}
 };
-extern "C" void * start_IMU_thread2(void *var);
-
-
 
 } /* namespace std */
 #endif /* IMU_H_ */

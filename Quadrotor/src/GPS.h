@@ -21,6 +21,7 @@
 #include <poll.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 
 namespace std {
 
@@ -30,6 +31,9 @@ public:
 	virtual ~GPS();
 	void init();
 	void getGPSData();
+	void startGPSThread();
+	int getThreadRunning();
+	void stopThread();
 
 private:
 	int serial_file;
@@ -41,6 +45,14 @@ private:
 		double time;
 		int valid;
 	} dataGPS;
+
+	int threadRunning;
+	pthread_t gpsThread_t;
+	void gpsThread(void *obj);
+	static void * start_thread(void *obj) {
+		reinterpret_cast<GPS *>(obj)->gpsThread(obj);
+		return 0;
+	}
 };
 
 } /* namespace std */

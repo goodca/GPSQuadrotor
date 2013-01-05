@@ -23,18 +23,13 @@ pthread_t cppThread;
 int main() {
 	cout << "Hello World" << endl; // prints
 	Sensors *sense = new Sensors;
-	IMU *imu = new IMU;
-	Compass *compass = new Compass;
-//	sense->runTest();
-	void *env;
 
 	puts("In main"); /* prints Broked */
-//	launchThreads();
-	imu->startIMU();
-	compass->startCompass();
-//	pthread_create(&cppThread, 0, &start_thread, env);
+	sense->startSensorsThreads();
 
-	sleep(5);
 
+	sleep(2);
+	sense->stopThread();
+	sleep(2);
 	return 0;
 }

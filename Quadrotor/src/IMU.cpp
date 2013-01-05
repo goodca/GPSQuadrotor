@@ -7,14 +7,12 @@
 
 #include "IMU.h"
 
-
 namespace std {
 
 IMU::IMU() {
 	// TODO Auto-generated constructor stub
 
 }
-
 
 void IMU::init() {
 	gyro = new Gyroscope;
@@ -36,8 +34,6 @@ void IMU::init() {
 //	pthread_create(&imuThread, 0, &start_thread, (void *) &variable);
 //	launch_pthread(&imuThread, 1, 99, start_IMU_thread2, (void *) &variable);
 
-
-
 	return;
 }
 
@@ -45,48 +41,47 @@ void IMU::update() {
 	int uToWait = 10000;
 	int clkDiv = 0;
 //	while (true) {
-		clkDiv++;
-		gyro->update();
-		//		usleep(uToWait / 2);
-		acel->update();
-		xGyroAngle += gyro->getX() * uToWait / 1000000;
-		yGyroAngle += gyro->getY() * uToWait / 1000000;
-		zGyroAngle += gyro->getZ() * uToWait / 1000000;
+	clkDiv++;
+	gyro->update();
+	//		usleep(uToWait / 2);
+	acel->update();
+	xGyroAngle += gyro->getX() * uToWait / 1000000;
+	yGyroAngle += gyro->getY() * uToWait / 1000000;
+	zGyroAngle += gyro->getZ() * uToWait / 1000000;
 
-		if (clkDiv > 50) {
-			printf("\n");
+	if (clkDiv > 50) {
+		printf("\n");
 //						printf("X Raw: %f\n", gyro->getX());
 //						printf("Y Raw: %f\n", gyro->getY());
 //						printf("Z Raw: %f\n", gyro->getZ());
-			printf("acel x: %f\n", acel->getX());
-			printf("acel y: %f\n", acel->getY());
-			printf("acel z: %f\n", acel->getZ());
-			printf("Uncorrected Gyro x; %f\n", xGyroAngle);
-			printf("Uncorrected Gyro y; %f\n", yGyroAngle);
-			printf("Uncorrected Gyro z; %f\n", zGyroAngle);
-			//			printf("Gyro x; %f\n", xInt + xGyroCorrection);
-			//			printf("Gyro y; %f\n", yInt + yGyroCorrection);
+		printf("acel x: %f\n", acel->getX());
+		printf("acel y: %f\n", acel->getY());
+		printf("acel z: %f\n", acel->getZ());
+		printf("Uncorrected Gyro x; %f\n", xGyroAngle);
+		printf("Uncorrected Gyro y; %f\n", yGyroAngle);
+		printf("Uncorrected Gyro z; %f\n", zGyroAngle);
+		//			printf("Gyro x; %f\n", xInt + xGyroCorrection);
+		//			printf("Gyro y; %f\n", yInt + yGyroCorrection);
 
-			//			printf("Accel x; %f\n", xAcel);
-			//			printf("Accel y; %f\n", yAcel);
-			//			printf("Accel z; %f\n", zAcel);
-			printf("magnitude: %f\n", acel->getMagnitude());
-			if ((acel->getMagnitude() > 0.95)
-					&& (acel->getMagnitude() < 1.05)) {
+		//			printf("Accel x; %f\n", xAcel);
+		//			printf("Accel y; %f\n", yAcel);
+		//			printf("Accel z; %f\n", zAcel);
+		printf("magnitude: %f\n", acel->getMagnitude());
+		if ((acel->getMagnitude() > 0.95) && (acel->getMagnitude() < 1.05)) {
 
-				//				printf("total magnitude: %f\n", magnitude);
-				//				printf("Roll: %f*\n", acel->getRoll());
-				//				printf("Pitch: %f*\n", acel->getPitch());
-				correctGyro();
-				printf("roll: %f\n", acel->getRoll());
-				printf("pitch: %f\n", acel->getPitch());
+			//				printf("total magnitude: %f\n", magnitude);
+			//				printf("Roll: %f*\n", acel->getRoll());
+			//				printf("Pitch: %f*\n", acel->getPitch());
+			correctGyro();
+			printf("roll: %f\n", acel->getRoll());
+			printf("pitch: %f\n", acel->getPitch());
 //				double angleFromComp;yGyroCorrection += acel->getPitch() - (yGyroAngle + yGyroCorrection);
 //				angleFromComp = comp->tiltComponsation(
 //						acel->getPitch() * pi / 180, acel->getRoll() * pi / 180)
 //						* 180 / 3.14159;
-				//				printf("heading is %f\n",
-				//						(comp->tiltComponsation(acel->getRoll(),
-				//								acel->getPitch()))*180/3.14159);
+			//				printf("heading is %f\n",
+			//						(comp->tiltComponsation(acel->getRoll(),
+			//								acel->getPitch()))*180/3.14159);
 //				printf("heading is %f\n", angleFromComp);
 //				if ((angleFromComp >= 337.5) || (angleFromComp <= 22.5)) {
 //					printf("N\n");
@@ -111,13 +106,12 @@ void IMU::update() {
 //						&& (angleFromComp <= 337.5)) {
 //					printf("NW\n");
 //				}
-			} else {
-				printf("\n\n\n");
-			}
-			clkDiv += -50;
+		} else {
+			printf("\n\n\n");
 		}
-		usleep(uToWait);
-
+		clkDiv += -50;
+	}
+	usleep(uToWait);
 
 	return;
 }
@@ -138,7 +132,7 @@ double IMU::getYAngle() {
 }
 double IMU::getZAngle() {
 
-	while(1){
+	while (1) {
 		printf("in get z angle\n");
 	}
 	return 0;
@@ -158,23 +152,33 @@ void IMU::correctGyro() {
 //	}
 //	return NULL;
 //}
-void IMU::startIMU(){
-	void *env;
-	pthread_create(&imuThread, 0, &IMU::start_thread, env);
+void IMU::startIMUThread() {
+	threadRunning = 1;
+pthread_create(&imuThread_t, 0, &IMU::start_thread, this);
 }
 
+void IMU::imuThread(void *obj) {
+	IMU *threadIMU = (IMU *) obj;
+	//All we do here is call the do_work() function
 
+	while (threadIMU->getThreadRunning()) {
+		printf("IMU looping\n");
 
+//		update();
+		usleep(500000);
+	}
+	return;
+}
+
+int IMU::getThreadRunning() {
+	return threadRunning;
+}
+void IMU::stopThread() {
+	threadRunning = 0;
+	return;
+}
 IMU::~IMU() {
 	// TODO Auto-generated destructor stub
 }
 
 } /* namespace std */
-extern "C" void * start_IMU_thread2(void *var){
-	while(true){
-		printf("IMU\n");
-	}
-
-	void *status = ( void * ) 0;
-	return status;
-}

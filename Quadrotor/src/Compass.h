@@ -22,34 +22,41 @@ class Compass {
 public:
 	Compass();
 	virtual ~Compass();
-	void init();
-	void update();
+
+
 	double getX();
 	double getY();
 	double getZ();
 	double tiltComponsation(double phi, double theta);
 	void * compassRun(void *p);
-	void startCompass();
+	void startCompassThread();
+	double getThreadRunning();
+	void stopThread();
 private:
-	pthread_t compassThread;
+	pthread_t compassThread_t;
+	int threadRunning;
+
 	int compassFile;
 	i2c *compassInterface;
 	int16_t x;
 	int16_t y;
 	int16_t z;
 	double unWrap(double angle);
-
+	void init();
+	void update();
+	void compassThread(void *obj);
 	static void * start_thread(void *obj) {
 		//All we do here is call the do_work() function
-		printf("in start_thread\n");
-		reinterpret_cast<Compass *>(obj)->getZ();
+		reinterpret_cast<Compass *>(obj)->compassThread(obj);
+		return 0;
 	}
+
 
 };
 #define MAG_DECLINATION 0; //in radians
 #define pi 3.14159
-#define ADXL_ADDR	0x1e
-#define I2C_PORT	3
+#define COMP_ADDR	0x1e
+#define COMP_I2C_PORT	3
 #define CONFIG_REG_A 0
 #define CONFIG_REG_B 1
 #define MODE_REG	2
