@@ -28,7 +28,8 @@ int main() {
 	sense->startSensorsThreads();
 
 
-	sleep(2);
+
+	sleep(3000);
 	sense->stopThread();
 	sleep(2);
 	return 0;

@@ -17,7 +17,7 @@ Compass::Compass() {
 void Compass::compassThread(void *obj) {
 	Compass *threadCompass = (Compass *) obj;
 	while(threadCompass->getThreadRunning()){
-		printf("Compass Running\n");
+//		printf("Compass Running\n");
 		usleep(500000);
 	}
 	//TODO: join the thread
@@ -61,10 +61,6 @@ double Compass::getY() {
 }
 
 double Compass::getZ() {
-	while(1){
-		printf("in compass getZ()\n");
-	}
-
 	return z;
 }
 

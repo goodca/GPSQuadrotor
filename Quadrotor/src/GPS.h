@@ -30,12 +30,14 @@ public:
 	GPS();
 	virtual ~GPS();
 	void init();
-	void getGPSData();
+
 	void startGPSThread();
 	int getThreadRunning();
 	void stopThread();
+	void update();
 
 private:
+	void getGPSData();
 	int serial_file;
 	void setMuxing();
 	void getCalculateLine();

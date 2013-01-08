@@ -37,6 +37,7 @@ public:
 	void stopThread();
 private:
 	int threadRunning;
+	int clkDiv;
 	Accelerometer *acel;
 	Gyroscope *gyro;
 	double xGyroCorrection; //the amount the gyro is thought to be off
@@ -57,6 +58,6 @@ private:
 		return 0;
 	}
 };
-
+#define MICRO_TO_WAIT 10000
 } /* namespace std */
 #endif /* IMU_H_ */

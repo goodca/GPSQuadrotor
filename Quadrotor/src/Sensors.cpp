@@ -16,15 +16,18 @@ Sensors::Sensors() {
 }
 void Sensors::startSensorsThreads() {
 	threadRunning = 1;
+	//start other sensor threads
 	imu = new IMU;
 	imu->startIMUThread();
+	usleep(100000);
 	comp = new Compass;
 	comp->startCompassThread();
+	usleep(100000);
 	gps = new GPS;
 	gps->startGPSThread();
+	usleep(100000);
 
-
-
+	//start main sensor thread
 	pthread_create(&sensorsThread_t, 0, &Sensors::start_thread, this);
 
 	return;
@@ -34,7 +37,7 @@ void Sensors::sensorsThread(void *obj) {
 	//All we do here is call the do_work() function
 
 	while (threadSense->getThreadRunning()) {
-		printf("Sensors looping\n");
+//		printf("Sensors looping\n");
 
 //		update();
 		usleep(500000);
@@ -47,7 +50,7 @@ void Sensors::update() {
 int Sensors::getThreadRunning() {
 	return threadRunning;
 }
-void Sensors::stopThread(){
+void Sensors::stopThread() {
 	threadRunning = 0;
 	imu->stopThread();
 	comp->stopThread();
@@ -175,6 +178,61 @@ void Sensors::runTest() {
 
 void updateGyroWCorr() {
 
+}
+
+double getXAngle(){
+	return 0;
+}
+double getYAngle(){
+	return 0;
+}
+double getZAngle(){
+	return 0;
+}
+double getXAngleSpeed(){
+	return 0;
+}
+double getYAngleSpeed(){
+	return 0;
+}
+double getZAngleSpeed(){
+	return 0;
+}
+double getXAngleAcceleration(){
+	return 0;
+}
+double getYAngleAcceleration(){
+	return 0;
+}
+double getZAngleAcceleration(){
+	return 0;
+}
+double getXVelocity(){
+	return 0;
+}
+double getYVelocity(){
+	return 0;
+}
+double getZVelocity(){
+	return 0;
+}
+double getXAcceleration(){
+	return 0;
+}
+double getYAcceleration(){
+	return 0;
+}
+double getZAcceleration(){
+	return 0;
+}
+double getLatitude(){
+	return 0;
+}
+double getLongtitude(){
+	return 0;
+}
+double getHeight(){
+	return 0;
 }
 
 Sensors::~Sensors() {

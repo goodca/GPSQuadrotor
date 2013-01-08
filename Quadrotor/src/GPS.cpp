@@ -22,21 +22,29 @@ void GPS::startGPSThread() {
 	return;
 }
 void GPS::gpsThread(void *obj) {
+	//cast to object in order to call original instance
 	GPS *threadGPS = (GPS *) obj;
-	//All we do here is call the do_work() function
+	threadGPS->init();
 
 	while (threadGPS->getThreadRunning()) {
 		printf("GPS looping\n");
-
+		threadGPS->update();
 //		update();
+
 		usleep(500000);
 	}
+	return;
+}
+
+void GPS::update() {
+	getGPSData();
+	return;
 }
 
 int GPS::getThreadRunning() {
 	return threadRunning;
 }
-void GPS::stopThread(){
+void GPS::stopThread() {
 	threadRunning = 0;
 	return;
 }
@@ -125,50 +133,48 @@ void GPS::getCalculateLine() {
 		temp.y = (int) temp.y / 100
 				+ ((int) temp.y % 100 + temp.y - (int) temp.y) / 60.0;
 		temp.valid = 1;
-		printf("CORRECTED FORM\nLatitude: %f, Longtitude: %f\n", temp.y,
-				temp.x);
+//		printf(
+//				"CORRECTED FORM\nLatitude: %f, Longtitude: %f\nSpeed in knots: %f course: %f\nSpeed in mph: %f\n",
+//				temp.y, temp.x, speedKnots, courseOverGround,
+//				speedKnots * 1.151);
 	}
 }
 
 void GPS::getGPSData() {
-	int attempts = 0;
-	int matches = -99;
-	while (1) {
-		attempts++;
-		printf("attempt number %d\n", attempts);
+
 //		char start[20] = { 0 };
-		char type[6] = { 0 };
-		char character[1];
-		char rightType[5] = { 'G', 'P', 'R', 'M', 'C' };
-		int right = false;
-		int i = 0;
-		while (true) {
-			if (!(read(serial_file, character, 1) > 0)) {
-				printf("Failed to read GPS\n");
-			}
-			if (character[0] == '$') {
-				printf("\n");
-				right = true;
-			} else {
-				right = false;
-			}
-			if (right) {
-				for (i = 0; i < 5; i++) {
-					read(serial_file, character, 1);
+	char type[6] = { 0 };
+	char character[1];
+	char rightType[5] = { 'G', 'P', 'R', 'M', 'C' };
+	int right = false;
+	int i = 0;
+	while (true) {
+		if (!(read(serial_file, character, 1) > 0)) {
+			printf("Failed to read GPS\n");
+		}
+		if (character[0] == '$') {
 
-					if (character[0] == rightType[i]) {
-						//do nothing
-						if (i == 4) { //getting here means we have gone all the way through the sequence
+			right = true;
+		} else {
+			right = false;
+		}
+		if (right) {
+			for (i = 0; i < 5; i++) {
+				read(serial_file, character, 1);
+
+				if (character[0] == rightType[i]) {
+					//do nothing
+					if (i == 4) { //getting here means we have gone all the way through the sequence
 //							printf("correct sequence received!\n");
-							getCalculateLine();
+						getCalculateLine();
 
-						}
-
-					} else {
-						break;
 					}
+
+				} else {
+					break;
 				}
 			}
+
 		}
 //
 //		if (!(read(serial_file, data, 100) > 0)) {
