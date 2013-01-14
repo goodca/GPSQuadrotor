@@ -25,12 +25,12 @@ int main() {
 	Sensors *sense = new Sensors;
 
 	puts("In main"); /* prints Broked */
-	sense->startSensorsThreads();
+//	sense->startSensorsThreads();
 
 
 
-	sleep(3000);
-	sense->stopThread();
-	sleep(2);
+
+//	sense->stopThread();
+	sleep(4);
 	return 0;
 }
