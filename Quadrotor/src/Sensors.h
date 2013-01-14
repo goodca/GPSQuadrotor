@@ -65,6 +65,15 @@ private:
 		return 0;
 	}
 
+	double xAngle;
+	double yAngle;
+	double zAngle;
+	double xVelocity;
+	double yVelocity;
+	double zVelocity;
+
+
+
 };
 
 } /* namespace std */
