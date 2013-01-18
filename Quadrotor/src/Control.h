@@ -16,6 +16,8 @@ namespace std{
 
 class Control {
 
+	double thrust;
+
 	double requestedXAngle;
 	double requestedYAngle;
 	double requestedZAngle;
@@ -46,10 +48,10 @@ class Control {
 
 
 
-	Motor Motor0();
-	Motor Motor1();
-	Motor Motor2();
-	Motor Motor3();
+	Motor *Motor1;
+	Motor *Motor2;
+	Motor *Motor3;
+	Motor *Motor4;
 
 public:
 	Control(Sensors * data);

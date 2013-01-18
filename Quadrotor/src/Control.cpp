@@ -25,6 +25,21 @@ Control::Control(Sensors * data) {
 void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 		double thrust) {
 
+	if(xAngle>35){
+		xAngle=35;
+	}
+
+	if(yAngle>35){
+		yAngle=35;
+	}
+	if(thrust>80){
+
+		thrust=80;
+
+	}
+
+
+
 	this->requestedXAngle = xAngle;
 	this->requestedYAngle = yAngle;
 	this->requestedZAngle = zAngle;
@@ -70,6 +85,11 @@ void Control::controlCycle() {
 
 	//motor stuff here
 
+	this->Motor1->setPower(this->thrust+angleFactorY-angleFactorX+angleFactorZ);
+	this->Motor2->setPower(this->thrust+angleFactorY+angleFactorX-angleFactorZ);
+	this->Motor3->setPower(this->thrust-angleFactorY+angleFactorX+angleFactorZ);
+	this->Motor4->setPower(this->thrust-angleFactorY-angleFactorX-angleFactorZ);
+
 }
 
 void Control::controlRun() {
@@ -86,32 +106,41 @@ void Control::controlRun() {
 void Control::controlStart() {
 
 	gettimeofday(&this->timestart, NULL);
-	this->OuterX = new PID(0, 0, 1, 0, 0, timestart, OuterXKp, OuterXKi,
+	this->OuterX = new PID(0, 0, 0, 0, 0, timestart, OuterXKp, OuterXKi,
 			OuterXKd);
 
+
 	gettimeofday(&this->timestart, NULL);
-	this->InnerX = new PID(0, 0, 1, 0, 0, timestart, InnerXKp, InnerXKi,
+	this->InnerX = new PID(0, 0, 0, 0, 0, timestart, InnerXKp, InnerXKi,
 			InnerXKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->OuterY = new PID(0, 0, 1, 0, 0, timestart, OuterYKp, OuterYKi,
+	this->OuterY = new PID(0, 0, 0, 0, 0, timestart, OuterYKp, OuterYKi,
 			OuterYKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->InnerY = new PID(0, 0, 1, 0, 0, timestart, InnerYKp, InnerYKi,
+	this->InnerY = new PID(0, 0, 0, 0, 0, timestart, InnerYKp, InnerYKi,
 			InnerYKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->OuterZ = new PID(0, 0, 1, 0, 0, timestart, OuterZKp, OuterZKi,
+	this->OuterZ = new PID(0, 0, 0, 0, 0, timestart, OuterZKp, OuterZKi,
 			OuterZKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->InnerZ = new PID(0, 0, 1, 0, 0, timestart, InnerZKp, InnerZKi,
+	this->InnerZ = new PID(0, 0, 0, 0, 0, timestart, InnerZKp, InnerZKi,
 			InnerZKd);
+
+	this->Motor1 = new Motor(1);
+
+	this->Motor2 = new Motor(2);
+
+	this->Motor3 = new Motor(3);
+
+	this->Motor4 = new Motor(4);
 
 }
 
-void updateMotors();
+
 
 Control::~Control() {
 	// TODO Auto-generated destructor stub
