@@ -9,6 +9,7 @@
 #define PID_H_
 #include <sys/time.h>
 
+namespace std{
 class PID {
 private:
 	double setPoint;
@@ -35,5 +36,5 @@ public:
 	virtual ~PID();
 };
 
-
+}/* namespace std */
 #endif /* PID_H_ */

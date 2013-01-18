@@ -176,62 +176,60 @@ void Sensors::runTest() {
 //	yGyroCorrection += acel->getPitch() - (yGyroAngle + yGyroCorrection);
 //}
 
-void updateGyroWCorr() {
 
-}
 
-double getXAngle(){
+double Sensors::getXAngle(){
 	return 0;
 }
-double getYAngle(){
+double Sensors::getYAngle(){
 	return 0;
 }
-double getZAngle(){
+double Sensors::getZAngle(){
 	return 0;
 }
-double getXAngleSpeed(){
+double Sensors::getXAngleSpeed(){
 	return 0;
 }
-double getYAngleSpeed(){
+double Sensors::getYAngleSpeed(){
 	return 0;
 }
-double getZAngleSpeed(){
+double Sensors::getZAngleSpeed(){
 	return 0;
 }
-double getXAngleAcceleration(){
+double Sensors::getXAngleAcceleration(){
 	return 0;
 }
-double getYAngleAcceleration(){
+double Sensors::getYAngleAcceleration(){
 	return 0;
 }
-double getZAngleAcceleration(){
+double Sensors::getZAngleAcceleration(){
 	return 0;
 }
-double getXVelocity(){
+double Sensors::getXVelocity(){
 	return 0;
 }
-double getYVelocity(){
+double Sensors::getYVelocity(){
 	return 0;
 }
-double getZVelocity(){
+double Sensors::getZVelocity(){
 	return 0;
 }
-double getXAcceleration(){
+double Sensors::getXAcceleration(){
 	return 0;
 }
-double getYAcceleration(){
+double Sensors::getYAcceleration(){
 	return 0;
 }
-double getZAcceleration(){
+double Sensors::getZAcceleration(){
 	return 0;
 }
-double getLatitude(){
+double Sensors::getLatitude(){
 	return 0;
 }
-double getLongtitude(){
+double Sensors::getLongtitude(){
 	return 0;
 }
-double getHeight(){
+double Sensors::getHeight(){
 	return 0;
 }
 

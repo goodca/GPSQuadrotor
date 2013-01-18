@@ -13,6 +13,7 @@ CPP_SRCS += \
 ../src/Gyroscope.cpp \
 ../src/IMU.cpp \
 ../src/Motor.cpp \
+../src/PID.cpp \
 ../src/Quadrotor.cpp \
 ../src/Sensors.cpp \
 ../src/Waypoint.cpp \
@@ -31,6 +32,7 @@ OBJS += \
 ./src/Gyroscope.o \
 ./src/IMU.o \
 ./src/Motor.o \
+./src/PID.o \
 ./src/Quadrotor.o \
 ./src/Sensors.o \
 ./src/Waypoint.o \
@@ -50,6 +52,7 @@ CPP_DEPS += \
 ./src/Gyroscope.d \
 ./src/IMU.d \
 ./src/Motor.d \
+./src/PID.d \
 ./src/Quadrotor.d \
 ./src/Sensors.d \
 ./src/Waypoint.d \

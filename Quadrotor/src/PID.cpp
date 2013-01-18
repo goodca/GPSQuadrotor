@@ -6,10 +6,9 @@
  */
 #include <stdio.h>
 #include "PID.h"
-#include "consants.h"
 #include <sys/time.h>
 
-
+namespace std{
 PID::PID(double setPoint0, double actualValue0, double previousError0,
 		double integral0, double output0, timeval timestart0,double Kp, double Ki, double Kd) {
 
@@ -55,4 +54,5 @@ PID::~PID() {
 
 
 
+}
 }

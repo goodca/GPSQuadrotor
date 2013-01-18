@@ -25,7 +25,7 @@ Motor::Motor(int motorNumber) {
 //	open(filename, O_RDWR);
 }
 
-void Motor::setPower(int newPower){
+void Motor::setPower(double newPower){
 	power=newPower;
 }
 

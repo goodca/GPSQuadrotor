@@ -15,7 +15,7 @@ class Motor {
 
 public:
 	Motor(int motorNumber);
-	void setPower(int newpower);
+	void setPower(double newpower);
 	virtual ~Motor();
 private:
 //	void Motor::changePWM();

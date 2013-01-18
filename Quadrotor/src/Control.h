@@ -9,24 +9,42 @@
 #define CONTROL_H_
 #include "Motor.h"
 #include <time.h>
+#include "Sensors.h"
+#include "PID.h"
+
+namespace std{
 
 class Control {
-	int* requestedXVelocity;
-	int* requestedYVelocity;
-	int* requestedZVelocity;
-	int* requestedYawVelocity;
-	int* currentXVelocity;
-	int* currentYVelocity;
-	int* currentZVelocity;
-	int* currentYawVelocity;
-	int* requestedXAcceloration;
-	int* requestedYAcceloration;
-	int* requestedZAcceloration;
-	int* requestedYawAcceloration;
-	int* currentXAcceloration;
-	int* currentYAcceloration;
-	int* currentZAcceloration;
-	int* currentYawAcceloration;
+
+	double requestedXAngle;
+	double requestedYAngle;
+	double requestedZAngle;
+	double requestedThrust;
+
+	double requestedXAngleRate;
+	double requestedYAngleRate;
+	double requestedZAngleRate;
+	double requestedThrustRate;
+
+	double realXAngle;
+	double realYAngle;
+	double realZAngle;
+	double realXAngleRate;
+	double realYAngleRate;
+	double realZAngleRate;
+
+	timeval timestart;
+
+    Sensors *realData;
+
+    PID *OuterX;
+    PID *InnerX;
+    PID *OuterY;
+    PID *InnerY;
+    PID *OuterZ;
+    PID *InnerZ;
+
+
 
 	Motor Motor0();
 	Motor Motor1();
@@ -34,25 +52,20 @@ class Control {
 	Motor Motor3();
 
 public:
-	Control();
-	void updateCurrentVelocityValues(int XVelocity, int YVelocity,
-			int ZVelocity, int YawAngle);
-	void updateDirections(int requestedXVelocity, int requestedYVelocity,
-			int requestedZVelocity, int requestedYawAngle);
-	void updateCurrentAcclerationValues(int currentXAccleration,
-			int currentYAccleration, int currentZAccleration,
-			int currentYawAccleration);
-	void updateRequestedAccleration(int currentXAccleration,
-			int currentYAccleration, int currentZAccleration,
-			int currentYawAccleration);
+	Control(Sensors * data);
 
-	void controlstart();
+	void updateRequestedAngle(double xAngle, double yAngle, double zAngle, double thrust);
+	void getSensorClass(Sensors sense);
+	void controlCycle();
 
-	void controlrun();
-	void PID(double* setPoint, double* actualValue, double* previousError,
-			double* integral, double* output, time_t* timestart);
-	void updateMotors();
+	void controlStart();
+
+	void controlRun();
+
+
 	virtual ~Control();
 };
+
+} /* namespace std */
 
 #endif /* CONTROL_H_ */
