@@ -17,134 +17,141 @@ IMU::IMU() {
 void IMU::init() {
 	gyro = new Gyroscope;
 	acel = new Accelerometer;
+	comp = new Compass;
 	printf("Initializing gyro\n");
 	gyro->init();
 	gyro->update();
 	printf("Initializing accelerometer\n");
 	acel->init();
 	acel->update();
+	printf("Initializing Compass\n");
+	comp->init();
+
 	xGyroCorrection = 0;
 	yGyroCorrection = 0;
 	zGyroCorrection = 0;
 	xGyroAngle = 0;
 	yGyroAngle = 0;
 	zGyroAngle = 0;
-	clkDiv = 0;
+	xVelocityCorrection = 0;
+	xVelocity = 0;
+	yVelocityCorrection = 0;
+	yVelocity = 0;
+	zVelocityCorrection = 0;
+	zVelocity = 0;
 
-	int variable = 0;
-//	pthread_create(&imuThread, 0, , this);
-//	printf("About to start new thread\n");
-//	fflush(stdout);
-//	pthread_create(&imuThread, 0, &start_thread, (void *) &variable);
-//	launch_pthread(&imuThread, 1, 99, start_IMU_thread2, (void *) &variable);
+	clkDiv = 0;
+	lowerMagnitudeForStable = 0.95;
+	upperMagnitudeForStable = 1.05;
 
 	return;
 }
 
 void IMU::update() {
-//	printf("%d ", clkDiv);
-
-//	while (true) {
 	clkDiv++;
 	gyro->update();
 	acel->update();
-	xGyroAngle += gyro->getX() * MICRO_TO_WAIT / 1000000;
-	yGyroAngle += gyro->getY() * MICRO_TO_WAIT / 1000000;
-	zGyroAngle += gyro->getZ() * MICRO_TO_WAIT / 1000000;
-	if ((acel->getMagnitude() > 0.95) && (acel->getMagnitude() < 1.05)) {
+	comp->update();
 
-				//				printf("total magnitude: %f\n", magnitude);
-				//				printf("Roll: %f*\n", acel->getRoll());
-				//				printf("Pitch: %f*\n", acel->getPitch());
-				correctGyro();
-	//			printf("roll: %f\n", acel->getRoll());
-	//			printf("pitch: %f\n", acel->getPitch());
-	//				double angleFromComp;yGyroCorrection += acel->getPitch() - (yGyroAngle + yGyroCorrection);
-	//				angleFromComp = comp->tiltComponsation(
-	//						acel->getPitch() * pi / 180, acel->getRoll() * pi / 180)
-	//						* 180 / 3.14159;
-				//				printf("heading is %f\n",
-				//						(comp->tiltComponsation(acel->getRoll(),
-				//								acel->getPitch()))*180/3.14159);
-	//				printf("heading is %f\n", angleFromComp);
-	//				if ((angleFromComp >= 337.5) || (angleFromComp <= 22.5)) {
-	//					printf("N\n");
-	//				} else if ((angleFromComp >= 22.5) && (angleFromComp <= 67.5)) {
-	//					printf("NE\n");
-	//				} else if ((angleFromComp >= 67.5)
-	//						&& (angleFromComp <= 112.5)) {
-	//					printf("E\n");
-	//				} else if ((angleFromComp >= 112.5)
-	//						&& (angleFromComp <= 157.5)) {
-	//					printf("SE\n");
-	//				} else if ((angleFromComp >= 157.5)
-	//						&& (angleFromComp <= 202.5)) {
-	//					printf("S\n");
-	//				} else if ((angleFromComp >= 202.5)
-	//						&& (angleFromComp <= 247.5)) {
-	//					printf("SW\n");
-	//				} else if ((angleFromComp >= 247.5)
-	//						&& (angleFromComp <= 292.5)) {
-	//					printf("W\n");
-	//				} else if ((angleFromComp >= 292.5)
-	//						&& (angleFromComp <= 337.5)) {
-	//					printf("NW\n");
-	//				}
-			} else {
+	xAcceleration = acel->getX();
+	yAcceleration = acel->getY();
+	zAcceleration = acel->getZ();
+	xAngleVelocity = gyro->getX();
+	yAngleVelocity = gyro->getY();
+	zAngleVelocity = gyro->getZ();
 
-			}
+	xAngleAcceleration = (xAngleVelocity - lastXAngleVelocity) / MICRO_TO_WAIT;
+	yAngleAcceleration = (yAngleVelocity - lastYAngleVelocity) / MICRO_TO_WAIT;
+	zAngleAcceleration = (zAngleVelocity - lastZAngleVelocity) / MICRO_TO_WAIT;
+	lastXAngleVelocity = xAngleVelocity;
+	lastYAngleVelocity = yAngleVelocity;
+	lastZAngleVelocity = zAngleVelocity;
+
+	xGyroAngle += xAngleVelocity * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+	yGyroAngle += yAngleVelocity * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+	zGyroAngle += zAngleVelocity * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+
+	xVelocity += xAcceleration * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+	yVelocity += yAcceleration * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+	zVelocity += zAcceleration * MICRO_TO_WAIT / NUM_MICROS_IN_ONE;
+
+	if ((acel->getMagnitude() > lowerMagnitudeForStable)
+			&& (acel->getMagnitude() < upperMagnitudeForStable)) {
+		correctGyro();
+	} else {
+		//do something maybe?
+	}
 
 	if (clkDiv > 50) {
-//		printf("\n");
-//						printf("X Raw: %f\n", gyro->getX());
-//						printf("Y Raw: %f\n", gyro->getY());
-//						printf("Z Raw: %f\n", gyro->getZ());
-//		printf("acel x: %f\n", acel->getX());
-//		printf("acel y: %f\n", acel->getY());
-//		printf("acel z: %f\n", acel->getZ());
-//		printf("Uncorrected Gyro x; %f\n", xGyroAngle);
-//		printf("Uncorrected Gyro y; %f\n", yGyroAngle);
-//		printf("Uncorrected Gyro z; %f\n", zGyroAngle);
-		//			printf("Gyro x; %f\n", xInt + xGyroCorrection);
-		//			printf("Gyro y; %f\n", yInt + yGyroCorrection);
-
-		//			printf("Accel x; %f\n", xAcel);
-		//			printf("Accel y; %f\n", yAcel);
-		//			printf("Accel z; %f\n", zAcel);
-//		printf("magnitude: %f\n", acel->getMagnitude());
-		printf("Corrected x: %f\n", xGyroAngle + xGyroCorrection);
-		printf("Corrected y: %f\n", yGyroAngle + yGyroCorrection);
-
+		printf("Corrected x: %f\n", getXAngle());
+		printf("Corrected y: %f\n", getYAngle());
+		printf("Corrected z: %f\n", getZAngle());
+		printf("Compass says %f degrees \n\n",
+				comp->getHeading(getXAngle(), getYAngle()));
 		clkDiv += -50;
-//		}
 	}
+	correctHeading();
 
 	return;
 }
 double IMU::getXAccel() {
-	return 0;
+	return xAcceleration;
 }
 double IMU::getYAccel() {
-	return 0;
+	return yAcceleration;
 }
 double IMU::getZAccel() {
-	return 0;
+	return zAcceleration;
 }
-double IMU::getXAngle() {
-	return 0;
+double IMU::getXVelocity() {
+	return xVelocity + xVelocityCorrection;
 }
-double IMU::getYAngle() {
-	return 0;
+double IMU::getYVelocity() {
+	return yVelocity + yVelocityCorrection;
 }
-double IMU::getZAngle() {
-	return 0;
-}
-void IMU::correctGyro() {
-	xGyroCorrection += (acel->getRoll() - (xGyroAngle + xGyroCorrection)) / 20;
-	yGyroCorrection += (acel->getPitch() - (yGyroAngle + yGyroCorrection)) / 20;
-	return;
+double IMU::getZVelocity() {
+	return zVelocity + zVelocityCorrection;
 }
 
+double IMU::getXAngleSpeed() {
+	return xAngleAcceleration;
+}
+double IMU::getYAngleSpeed() {
+	return yAngleAcceleration;
+}
+double IMU::getZAngleSpeed() {
+	return zAngleAcceleration;
+}
+double IMU::getXAngle() {
+	return xGyroAngle + xGyroCorrection;
+}
+double IMU::getYAngle() {
+	return yGyroAngle + yGyroCorrection;
+}
+double IMU::getZAngle() {
+	return zGyroAngle + zGyroCorrection;
+}
+double IMU::getXAngleAcceleration() {
+	return xAngleAcceleration;
+}
+double IMU::getYAngleAcceleration() {
+	return yAngleAcceleration;
+}
+double IMU::getZAngleAcceleration() {
+	return zAngleAcceleration;
+}
+void IMU::correctGyro() {
+	xGyroCorrection += (acel->getRoll() - (xGyroAngle + xGyroCorrection))
+			/ FRACTION_TO_CORRECT;
+	yGyroCorrection += (acel->getPitch() - (yGyroAngle + yGyroCorrection))
+			/ FRACTION_TO_CORRECT;
+	return;
+}
+void IMU::correctHeading() {
+	zGyroCorrection += (comp->getHeading(getXAngle(), getYAngle())
+			- (zGyroAngle + zGyroCorrection)) / COMPASS_FRACTION_TO_CORRECT;
+	return;
+}
 void IMU::startIMUThread() {
 	threadRunning = 1;
 	pthread_create(&imuThread_t, 0, &IMU::start_thread, this);
@@ -156,7 +163,6 @@ void IMU::imuThread(void *obj) {
 	threadIMU->init();
 
 	while (threadIMU->getThreadRunning()) {
-
 		threadIMU->update();
 		usleep(MICRO_TO_WAIT);
 	}

@@ -16,22 +16,21 @@ Compass::Compass() {
 
 void Compass::compassThread(void *obj) {
 	Compass *threadCompass = (Compass *) obj;
-	while(threadCompass->getThreadRunning()){
-//		printf("Compass Running\n");
+	while (threadCompass->getThreadRunning()) {
+		printf("Compass Running\n");
 		usleep(500000);
 	}
 	//TODO: join the thread
 	return;
 }
-double Compass::getThreadRunning(){
+double Compass::getThreadRunning() {
 	return threadRunning;
 }
-void Compass::stopThread(){
+void Compass::stopThread() {
 	threadRunning = 0;
 }
 
 void Compass::init() {
-	printf("Initializing Compass\n");
 	compassInterface = new i2c(COMP_I2C_PORT, COMP_ADDR);
 	compassFile = compassInterface->getFile();
 //	compassInterface->writeByte(compassFile, CONFIG_REG_A, 0b00110000);
@@ -52,16 +51,21 @@ void Compass::update() {
 	return;
 }
 
-double Compass::getX() {
-	return x;
-}
+double Compass::getHeading(double xAngle, double yAngle) {
+	double phi = yAngle * pi / 180;
+	double theta = xAngle * pi / 180;
+	double Xh = x * cos(theta) + y * sin(phi) * sin(theta)
+			+ z * cos(phi) * sin(theta);
+//	printf("Xh: %f\n", Xh);
 
-double Compass::getY() {
-	return y;
-}
-
-double Compass::getZ() {
-	return z;
+	double Yh = y * cos(phi) - z * sin(phi);
+//	printf("Yh: %f\n", Yh);
+	double angle = atan2(-Yh, Xh);
+	angle += MAG_DECLINATION;
+	angle = unWrap(angle);
+	angle = angle * 180 / pi;
+//	printf("%f degrees from north\n", angle);
+	return angle;
 }
 
 double Compass::unWrap(double angle) {
@@ -80,24 +84,8 @@ double Compass::unWrap(double angle) {
 	}
 	return angle;
 }
-double Compass::tiltComponsation(double phi, double theta) {
 
-//magnetometer_readings_to_tilt_compensated_heading
-//Takes in raw magnetometer values, pitch and roll and turns it into a tilt-compensated heading value ranging from -pi to pi (everything in this function should be in radians).
-
-	double Xh = x * cos(theta) + y * sin(phi) * sin(theta)
-			+ z * cos(phi) * sin(theta);
-	printf("Xh: %f\n", Xh);
-
-	double Yh = y * cos(phi) - z * sin(phi);
-	printf("Yh: %f\n", Yh);
-	double angle = atan2(-Yh, Xh);
-	angle += MAG_DECLINATION;
-	angle = unWrap(angle);
-	return angle;
-}
-
-void Compass::startCompassThread(){
+void Compass::startCompassThread() {
 	threadRunning = 1;
 	pthread_create(&compassThread_t, 0, &Compass::start_thread, this);
 }

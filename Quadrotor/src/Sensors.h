@@ -47,6 +47,7 @@ public:
 	double getLatitude(); //in degrees
 	double getLongtitude(); //in degrees
 	double getHeight(); //not sure on units yet
+	double getHeading();
 
 	void startSensorsThreads();
 	int getThreadRunning();
@@ -75,6 +76,7 @@ private:
 
 
 };
+
 
 } /* namespace std */
 #endif /* SENSORS_H_ */

@@ -26,12 +26,12 @@ int main() {
 	Sensors *sense = new Sensors;
 	Control *controller = new Control(sense);
 	puts("In main"); /* prints Broked */
-//	sense->startSensorsThreads();
+	sense->startSensorsThreads();
 
 
 
 
 //	sense->stopThread();
-	sleep(4);
+	sleep(40);
 	return 0;
 }

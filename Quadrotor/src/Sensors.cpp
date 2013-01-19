@@ -21,8 +21,8 @@ void Sensors::startSensorsThreads() {
 	imu->startIMUThread();
 	usleep(100000);
 	comp = new Compass;
-	comp->startCompassThread();
-	usleep(100000);
+//	comp->startCompassThread();
+//	usleep(100000);
 	gps = new GPS;
 	gps->startGPSThread();
 	usleep(100000);
@@ -179,49 +179,49 @@ void Sensors::runTest() {
 
 
 double Sensors::getXAngle(){
-	return 0;
+	return imu->getXAngle();
 }
 double Sensors::getYAngle(){
-	return 0;
+	return imu->getYAngle();
 }
 double Sensors::getZAngle(){
-	return 0;
+	return imu->getZAngle();
 }
 double Sensors::getXAngleSpeed(){
-	return 0;
+	return imu->getXAngleSpeed();
 }
 double Sensors::getYAngleSpeed(){
-	return 0;
+	return imu->getYAngleSpeed();
 }
 double Sensors::getZAngleSpeed(){
-	return 0;
+	return imu->getZAngleSpeed();
 }
 double Sensors::getXAngleAcceleration(){
-	return 0;
+	return imu->getXAngleAcceleration();
 }
 double Sensors::getYAngleAcceleration(){
-	return 0;
+	return imu->getYAngleAcceleration();
 }
 double Sensors::getZAngleAcceleration(){
-	return 0;
+	return imu->getZAngleAcceleration();
 }
 double Sensors::getXVelocity(){
-	return 0;
+	return imu->getXVelocity();
 }
 double Sensors::getYVelocity(){
-	return 0;
+	return imu->getYVelocity();
 }
 double Sensors::getZVelocity(){
-	return 0;
+	return imu->getZVelocity();
 }
 double Sensors::getXAcceleration(){
-	return 0;
+	return imu->getXAccel();
 }
 double Sensors::getYAcceleration(){
-	return 0;
+	return imu->getYAccel();
 }
 double Sensors::getZAcceleration(){
-	return 0;
+	return imu->getZAccel();
 }
 double Sensors::getLatitude(){
 	return 0;

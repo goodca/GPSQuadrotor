@@ -22,12 +22,10 @@ class Compass {
 public:
 	Compass();
 	virtual ~Compass();
+	void init();
+	void update();
 
-
-	double getX();
-	double getY();
-	double getZ();
-	double tiltComponsation(double phi, double theta);
+	double getHeading(double xAngle, double yAngle); //returns in degrees the heading
 	void * compassRun(void *p);
 	void startCompassThread();
 	double getThreadRunning();
@@ -42,8 +40,8 @@ private:
 	int16_t y;
 	int16_t z;
 	double unWrap(double angle);
-	void init();
-	void update();
+
+
 	void compassThread(void *obj);
 	static void * start_thread(void *obj) {
 		//All we do here is call the do_work() function
