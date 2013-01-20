@@ -38,8 +38,6 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 
 	}
 
-
-
 	this->requestedXAngle = xAngle;
 	this->requestedYAngle = yAngle;
 	this->requestedZAngle = zAngle;
@@ -130,14 +128,14 @@ void Control::controlStart() {
 	this->InnerZ = new PID(0, 0, 0, 0, 0, timestart, InnerZKp, InnerZKi,
 			InnerZKd);
 
-	this->Motor1 = new Motor(1);
-
-	this->Motor2 = new Motor(2);
-
-	this->Motor3 = new Motor(3);
-
-	this->Motor4 = new Motor(4);
-
+	this->Motor1 = new Motor();
+	Motor1->init(1);
+	this->Motor2 = new Motor();
+	Motor2->init(2);
+	this->Motor3 = new Motor();
+	Motor3->init(3);
+	this->Motor4 = new Motor();
+	Motor4->init(4);
 }
 
 
