@@ -22,7 +22,8 @@ namespace std {
 
 class RemoteInput {
 public:
-	RemoteInput(int remoteChannel, int gpio);
+	RemoteInput();
+	void start(int remoteChannel, int gpio);
 	virtual ~RemoteInput();
 private:
 	FILE *valuefp;
