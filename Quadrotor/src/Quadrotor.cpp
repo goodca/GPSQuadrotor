@@ -16,6 +16,7 @@ extern "C" {
 #include "Control.h"
 #include <pthread.h>
 #include "Motor.h"
+#include "RemoteInput.h"
 }
 
 using namespace std;
@@ -52,6 +53,10 @@ int main() {
 //	motor4->setPower(0);
 
 //	sense->stopThread();
+
+	RemoteInput *remote = new RemoteInput;
+	remote->start(1, 38);
+
 	sleep(40);
 	return 0;
 }

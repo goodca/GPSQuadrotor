@@ -9,7 +9,12 @@
 
 namespace std {
 
-RemoteInput::RemoteInput(int remoteChannel, int gpio) {
+RemoteInput::RemoteInput() {
+
+	return;
+}
+
+void RemoteInput::start(int remoteChannel, int gpio) {
 	channel = remoteChannel;
 	if (remoteChannel == 1) {
 		set_mux_value("gpmc_ad6", 7);
@@ -18,53 +23,80 @@ RemoteInput::RemoteInput(int remoteChannel, int gpio) {
 	}
 
 	set_gpio_edge("both");
+	printf("Starting to poll\n");
 	pollInputThread();
 
+	return;
 }
 
 void RemoteInput::pollInputThread() {
+
+	int fd, len, value;
+	char buf[MAX_BUF];
+	char ch;
+
+	len = snprintf(buf, sizeof(buf), "/sys/class/gpio%d/value", gpio);
+
+	fd = open(buf, O_WRONLY);
+	if (fd < 0) {
+		perror("gpio/get-value");
+		return;
+	}
+
+	printf("%d chars read\n", read(fd, &ch, 1));
+
+	if (ch != '0') {
+		value = 1;
+	} else {
+		value = 0;
+	}
+
+	printf("Value of pin is: %d\n", value);
+
+	close(fd);
+
 	timeout = TIMEOUT;
 	struct pollfd fdset[2];
 	int nfds = 2;
 	int gpio_fd, timeout, rc;
-	char buf[MAX_BUF];
-	int len;
-
+//	char buf[MAX_BUF];
+//	int len;
+	printf("Starting while loop\n");
 	while (1) {
-			memset((void*)fdset, 0, sizeof(fdset));
+		memset((void*) fdset, 0, sizeof(fdset));
 
-			fdset[0].fd = STDIN_FILENO;
-			fdset[0].events = POLLIN;
+		fdset[0].fd = STDIN_FILENO;
+		fdset[0].events = POLLIN;
 
-			fdset[1].fd = gpio_fd;
-			fdset[1].events = POLLPRI;
+		fdset[1].fd = gpio_fd;
+		fdset[1].events = POLLPRI;
+		printf("About to poll\n");
+		rc = poll(fdset, nfds, timeout);
+		printf("Out of poll\n");
 
-			rc = poll(fdset, nfds, timeout);
-
-			if (rc < 0) {
-				printf("\npoldirectionl() failed!\n");
-				return;
-			}
-
-			if (rc == 0) {
-				printf(".");
-			}
-
-			if (fdset[1].revents & POLLPRI) {
-				lseek(fdset[1].fd, 0, SEEK_SET);  // Read from the start of the file
-				len = read(fdset[1].fd, buf, MAX_BUF);
-				printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n",
-					 gpio, buf[0], len);
-			}
-
-			if (fdset[0].revents & POLLIN) {
-				(void)read(fdset[0].fd, buf, 1);
-				printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
-			}
-
-			fflush(stdout);
+		if (rc < 0) {
+			printf("\npoldirectionl() failed!\n");
+			return;
 		}
 
+		if (rc == 0) {
+			printf(".");
+		}
+
+		if (fdset[1].revents & POLLPRI) {
+			lseek(fdset[1].fd, 0, SEEK_SET); // Read from the start of the file
+			len = read(fdset[1].fd, buf, MAX_BUF);
+			printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n",
+					gpio, buf[0], len);
+		}
+
+		if (fdset[0].revents & POLLIN) {
+			(void) read(fdset[0].fd, buf, 1);
+			printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
+		}
+
+		fflush(stdout);
+	}
 
 	return;
 }
