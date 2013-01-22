@@ -80,15 +80,34 @@ void Control::controlCycle() {
 	angleFactorZ = this->InnerZ->UpdateOutput();
 
 	//motor stuff here
+	if ((this->thrust + angleFactorY - angleFactorX + angleFactorZ) < 100) {
+		this->Motor1->setPower(
+				this->thrust + angleFactorY - angleFactorX + angleFactorZ);
+	} else {
+		this->Motor1->setPower(100);
 
-	this->Motor1->setPower(
-			this->thrust + angleFactorY - angleFactorX + angleFactorZ);
-	this->Motor2->setPower(
-			this->thrust + angleFactorY + angleFactorX - angleFactorZ);
-	this->Motor3->setPower(
-			this->thrust - angleFactorY + angleFactorX + angleFactorZ);
-	this->Motor4->setPower(
-			this->thrust - angleFactorY - angleFactorX - angleFactorZ);
+	}
+	if ((this->thrust + angleFactorY + angleFactorX - angleFactorZ) < 100) {
+		this->Motor2->setPower(
+				this->thrust + angleFactorY + angleFactorX - angleFactorZ);
+	} else {
+		this->Motor2->setPower(100);
+
+	}
+	if ((this->thrust - angleFactorY + angleFactorX + angleFactorZ) < 100) {
+		this->Motor3->setPower(
+				this->thrust - angleFactorY + angleFactorX + angleFactorZ);
+	} else {
+		this->Motor3->setPower(100);
+
+	}
+	if ((this->thrust - angleFactorY - angleFactorX - angleFactorZ) < 100) {
+		this->Motor4->setPower(
+				this->thrust - angleFactorY - angleFactorX - angleFactorZ);
+	} else {
+		this->Motor4->setPower(100);
+
+	}
 
 }
 
@@ -134,12 +153,12 @@ void Control::controlRun() {
 }
 
 void Control::UpdateRequestedVelocity(double Xspeed, double Yspeed,
-		double Zspeed, double zAngle){
+		double Zspeed, double zAngle) {
 
-	this->requestedXvelocity=Xspeed;
-	this->requestedYvelocity=Yspeed;
-	this->requestedZvelocity=Zspeed;
-	this->requestedZAngle=zAngle;
+	this->requestedXvelocity = Xspeed;
+	this->requestedYvelocity = Yspeed;
+	this->requestedZvelocity = Zspeed;
+	this->requestedZAngle = zAngle;
 }
 
 void Control::setRemote(int on) {
@@ -175,14 +194,12 @@ void Control::controlStart() {
 			InnerZKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->OuterThrust = new PID(0, 0, 0, 0, 0, timestart, OuterThrustKp, OuterThrustKi,
-			OuterThrustKd);
+	this->OuterThrust = new PID(0, 0, 0, 0, 0, timestart, OuterThrustKp,
+			OuterThrustKi, OuterThrustKd);
 
 	gettimeofday(&this->timestart, NULL);
-	this->InnerThrust = new PID(0, 0, 0, 0, 0, timestart, InnerThrustKp, InnerThrustKi,
-			InnerThrustKd);
-
-
+	this->InnerThrust = new PID(0, 0, 0, 0, 0, timestart, InnerThrustKp,
+			InnerThrustKi, InnerThrustKd);
 
 	this->Motor1 = new Motor();
 	Motor1->init(1);
