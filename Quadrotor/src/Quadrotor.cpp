@@ -28,28 +28,28 @@ int main() {
 	Control *controller = new Control(sense);
 	puts("In main"); /* prints Broked */
 //	sense->startSensorsThreads();
-	Motor *motor1 = new Motor();
-	Motor *motor2 = new Motor();
-	Motor *motor3 = new Motor();
-	Motor *motor4 = new Motor();
-
-	motor1->init(1);
-	motor2->init(2);
-	motor3->init(3);
-	motor4->init(4);
-	int i;
-	for (i = 0; i < 100; i++) {
-		printf("iteration: %d\n", i);
-		motor1->setPower(i);
-		motor2->setPower(i);
-		motor3->setPower(i);
-		motor4->setPower(i);
-		usleep(100000);
-	}
-	motor1->setPower(0);
-	motor2->setPower(0);
-	motor3->setPower(0);
-	motor4->setPower(0);
+//	Motor *motor1 = new Motor();
+//	Motor *motor2 = new Motor();
+//	Motor *motor3 = new Motor();
+//	Motor *motor4 = new Motor();
+//
+//	motor1->init(1);
+//	motor2->init(2);
+//	motor3->init(3);
+//	motor4->init(4);
+//	int i;
+//	for (i = 0; i < 100; i++) {
+//		printf("iteration: %d\n", i);
+//		motor1->setPower(i);
+//		motor2->setPower(i);
+//		motor3->setPower(i);
+//		motor4->setPower(i);
+//		usleep(100000);
+//	}
+//	motor1->setPower(0);
+//	motor2->setPower(0);
+//	motor3->setPower(0);
+//	motor4->setPower(0);
 
 //	sense->stopThread();
 	sleep(40);
