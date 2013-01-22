@@ -107,6 +107,7 @@ int RemoteInput::set_gpio_direction(char* direction) {
 	fprintf(fp, "%s\n", direction);
 	fflush(fp);
 	fclose(fp);
+	return 0;
 }
 
 void RemoteInput::export_gpio() {

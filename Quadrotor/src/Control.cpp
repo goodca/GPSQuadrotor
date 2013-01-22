@@ -94,6 +94,7 @@ void Control::controlRun() {
 
 	this->controlStart();
 	while (1) {
+
 		this->controlCycle();
 		usleep(SleepTime);
 
