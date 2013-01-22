@@ -16,6 +16,8 @@ namespace std{
 
 class Control {
 
+	int remote;
+
 	double thrust;
 
 	double requestedXAngle;
@@ -23,17 +25,12 @@ class Control {
 	double requestedZAngle;
 	double requestedThrust;
 
-	double requestedXAngleRate;
-	double requestedYAngleRate;
-	double requestedZAngleRate;
-	double requestedThrustRate;
 
-	double realXAngle;
-	double realYAngle;
-	double realZAngle;
-	double realXAngleRate;
-	double realYAngleRate;
-	double realZAngleRate;
+	double requestedXvelocity;
+	double requestedYvelocity;
+	double requestedZvelocity;
+
+
 
 	timeval timestart;
 
@@ -46,6 +43,12 @@ class Control {
     PID *OuterZ;
     PID *InnerZ;
 
+    PID *InnerThrust;
+    PID *OuterThrust;
+
+    PID *Xvelocity;
+    PID *Yvelocity;
+
 
 
 	Motor *Motor1;
@@ -57,7 +60,13 @@ public:
 	Control(Sensors * data);
 
 	void updateRequestedAngle(double xAngle, double yAngle, double zAngle, double thrust);
+
+	void UpdateRequestedVelocity(double Xspeed, double yspeed, double zspeed, double zAngle);
+
 	void getSensorClass(Sensors sense);
+
+	void setRemote(int on);
+
 	void controlCycle();
 
 	void controlStart();

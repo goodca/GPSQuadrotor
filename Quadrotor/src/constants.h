@@ -34,6 +34,14 @@
 #define InnerZKi .0001
 #define InnerZKd .01
 
+#define OuterThrustKp .0001
+#define OuterThrustKi .0001
+#define OuterThrustKd .01
+
+#define InnerThrustKp .0001
+#define InnerThrustKi .0001
+#define InnerThrustKd .01
+
 
 
 #endif /* CONSTANTS_H_ */
