@@ -19,9 +19,10 @@ public:
 	Motor();
 	void init(int motorNumber);
 	void setPower(double newpower);
-	int set_pwm(double duty_percent);
+
 	virtual ~Motor();
 private:
+	void set_pwm(int pw);
 //	void Motor::changePWM();
 	int set_mux_value(char* mux, int value);
 	int motor;
@@ -31,6 +32,8 @@ private:
 	int motorNum;
 	int file;
 	char filename[20];
+	FILE *fp;
+	char path[MAX_BUF];
 };
 
 #define O_RDWR		     02
@@ -39,7 +42,7 @@ private:
 #define MOTOR_3
 #define MOTOR_4
 #define FREQUENCY 50
-#define MIN_DUTY_CYCLE 5
-#define MAX_DUTY_CYCLE 7
+#define MIN_HIGH_TIME_NS 1000000
+#define MAX_HIGH_TIME_NS 2000000
 
 #endif /* MOTOR_H_ */
