@@ -27,7 +27,11 @@ public:
 	void start(int remoteChannel, int gpio);
 	virtual ~RemoteInput();
 private:
+	int timesBeforeReliable;
 	FILE *valuefp;
+	double minTime;
+	double maxTime;
+
 	int channel;
 	int gpio;
 	int timeout;
