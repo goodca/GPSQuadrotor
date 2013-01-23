@@ -6,6 +6,7 @@
  */
 
 #include "RemoteInput.h"
+#include <sys/time.h>
 
 namespace std {
 
@@ -14,15 +15,18 @@ RemoteInput::RemoteInput() {
 	return;
 }
 
-void RemoteInput::start(int remoteChannel, int gpio) {
+void RemoteInput::start(int remoteChannel, int gpioInput) {
 	channel = remoteChannel;
-	if (remoteChannel == 1) {
-		set_mux_value("gpmc_ad6", 7);
-		export_gpio();
-		gpio = 38;
-	}
+	if (channel == 1) {
+//		set_mux_value("gpmc_ad6", 7);
+		char* name;
+		name = "gpmc_ad6";;
 
-	set_gpio_edge("both");
+		printf("Set gpio to %d\n", gpio);
+	}
+	gpio = gpioInput;
+	printf("Gpio = %d\n", gpio);
+	printf("Gpio = %d last in start before poll function\n", gpio);
 	printf("Starting to poll\n");
 	pollInputThread();
 
@@ -30,78 +34,103 @@ void RemoteInput::start(int remoteChannel, int gpio) {
 }
 
 void RemoteInput::pollInputThread() {
-
-	int fd, len, value;
-	char buf[MAX_BUF];
-	char ch;
-
-	len = snprintf(buf, sizeof(buf), "/sys/class/gpio%d/value", gpio);
-
-	fd = open(buf, O_WRONLY);
-	if (fd < 0) {
-		perror("gpio/get-value");
-		return;
-	}
-
-	printf("%d chars read\n", read(fd, &ch, 1));
-
-	if (ch != '0') {
-		value = 1;
-	} else {
-		value = 0;
-	}
-
-	printf("Value of pin is: %d\n", value);
-
-	close(fd);
-
-	timeout = TIMEOUT;
 	struct pollfd fdset[2];
-	int nfds = 2;
-	int gpio_fd, timeout, rc;
-//	char buf[MAX_BUF];
-//	int len;
-	printf("Starting while loop\n");
-	while (1) {
-		memset((void*) fdset, 0, sizeof(fdset));
+		int nfds = 2;
+		int gpio_fd, timeout, rc;
+		char buf[MAX_BUF];
+		unsigned int gpio;
+		int len;
 
-		fdset[0].fd = STDIN_FILENO;
-		fdset[0].events = POLLIN;
+		// Set the signal callback for Ctrl-C
+//		signal(SIGINT, signal_handler);
 
-		fdset[1].fd = gpio_fd;
-		fdset[1].events = POLLPRI;
-		printf("About to poll\n");
-		rc = poll(fdset, nfds, timeout);
-		printf("Out of poll\n");
+//		gpio = atoi(argv[1]);
 
-		if (rc < 0) {
-			printf("\npoldirectionl() failed!\n");
-			return;
+		export_gpio();
+		set_gpio_direction(0);
+		set_gpio_edge("both");  // Can be rising, falling or both
+		gpio_fd = gpio_fd_open();
+
+		timeout = TIMEOUT;
+
+		while (1) {
+			memset((void*)fdset, 0, sizeof(fdset));
+
+			fdset[0].fd = STDIN_FILENO;
+			fdset[0].events = POLLIN;
+
+			fdset[1].fd = gpio_fd;
+			fdset[1].events = POLLPRI;
+
+			rc = poll(fdset, nfds, timeout);
+
+			if (rc < 0) {
+				printf("\npoll() failed!\n");
+				return;
+			}
+
+			if (rc == 0) {
+				printf(".");
+			}
+
+			if (fdset[1].revents & POLLPRI) {
+				lseek(fdset[1].fd, 0, SEEK_SET);  // Read from the start of the file
+				len = read(fdset[1].fd, buf, MAX_BUF);
+				printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n",
+					 gpio, buf[0], len);
+				printf("the read gives: %c\n", buf[0]);
+
+				char buf2[MAX_BUF];
+				char buf3[MAX_BUF];
+				buf2[0] = '0';
+				buf3[0] = '1';
+//				char value = *buf[0];
+				if (buf[0] == '1'){
+
+					gettimeofday(&this->starttime, NULL);
+					printf("high\n");
+
+				}else if(buf[0] == '0'){
+					gettimeofday(&this->endtime, NULL);
+					double timechange = (1000000 * this->endtime.tv_sec+this->endtime.tv_usec)-(1000000 *this->starttime.tv_sec+this->starttime.tv_usec);
+					this->PercentAmount= (timechange- 1000)/10;
+					printf("low\n total time=%f\n percent=%f\n",timechange, this->PercentAmount);
+				}else{
+					printf("apparently you screwed up, we got: %c\n", buf[0]);
+				}
+
+
+			}
+
+			if (fdset[0].revents & POLLIN) {
+				(void)read(fdset[0].fd, buf, 1);
+				printf("\npoll() stdin read 0x%2.2s\n", buf[0]);
+			}
+
+			fflush(stdout);
 		}
 
-		if (rc == 0) {
-			printf(".");
-		}
-
-		if (fdset[1].revents & POLLPRI) {
-			lseek(fdset[1].fd, 0, SEEK_SET); // Read from the start of the file
-			len = read(fdset[1].fd, buf, MAX_BUF);
-			printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n",
-					gpio, buf[0], len);
-		}
-
-		if (fdset[0].revents & POLLIN) {
-			(void) read(fdset[0].fd, buf, 1);
-			printf("\npoll() stdin read 0x%2.2X\n", (unsigned int) buf[0]);
-		}
-
-		fflush(stdout);
-	}
-
+		close(gpio_fd);
 	return;
 }
 
+int RemoteInput::gpio_fd_open() {
+	printf("Gpio = %d gpio_fd_open\n", gpio);
+	int fd, len;
+	char buf[MAX_BUF];
+
+	len = snprintf(buf, sizeof(buf), "/sys/class/gpio/gpio%d/value", gpio);
+
+	fd = open(buf, O_RDONLY | O_NONBLOCK);
+	if (fd < 0) {
+		perror("gpio/fd_open");
+	}
+	printf("Gpio = %d gpio_fd_open\n", gpio);
+	return fd;
+}
+
 void RemoteInput::set_gpio_edge(char* edge) {
+	printf("Gpio = %d set gpio edge\n", gpio);
 	FILE *fp;
 	char path[MAX_BUF];
 
@@ -118,27 +147,28 @@ void RemoteInput::set_gpio_edge(char* edge) {
 	fprintf(fp, "%s\n", edge);
 	fflush(fp);
 	fclose(fp);
+	printf("Gpio = %d set gpio edge\n", gpio);
 	return;
 }
 
-int RemoteInput::set_gpio_direction(char* direction) {
-	FILE *fp;
-	char path[MAX_BUF];
+int RemoteInput::set_gpio_direction(int  direction) {
+	int fd, len;
+		char buf[MAX_BUF];
 
-//create path using specified gpio
-	snprintf(path, sizeof path, "/sys/class/gpio/gpio%d/direction", gpio);
-//open direction file
-	if ((fp = fopen(path, "w")) == NULL) {
-		printf("Cannot open specified direction file. Is gpio%d exported?\n",
-				gpio);
-		return 1;
-	}
+		len = snprintf(buf, sizeof(buf),  "/sys/class/gpio/gpio%d/direction", gpio);
 
-//write "in" or "out" to direction file
-	rewind(fp);
-	fprintf(fp, "%s\n", direction);
-	fflush(fp);
-	fclose(fp);
+		fd = open(buf, O_WRONLY);
+		if (fd < 0) {
+			perror("gpio/direction");
+			return fd;
+		}
+
+		if (direction)
+			write(fd, "out", 4);
+		else
+			write(fd, "in", 3);
+
+		close(fd);
 	return 0;
 }
 
@@ -150,7 +180,7 @@ void RemoteInput::export_gpio() {
 		printf("Cannot open export file. \n");
 		return;
 	}
-
+	printf("Exporting gpio %d\n", gpio);
 //write specified gpio to export file
 	fprintf(fp, "%d\n", gpio);
 	fflush(fp);

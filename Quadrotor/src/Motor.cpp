@@ -15,22 +15,22 @@ void Motor::init(int motorNumber) {
 	if (motorNumber == 1) {
 		//GPIO2_6 mode3 lcd_data0 = ehrpwm.2:0
 		set_mux_value("lcd_data0", 3);
-		motorName = "ehrpwm.2\:0";
+//		motorName = "ehrpwm.2\:0";
 
 	} else if (motorNumber == 2) {
 		//GPIO2_7 mode3 lcd_data1 = ehrpwm.2:1
 		set_mux_value("lcd_data1", 3);
-		motorName = "ehrpwm.2\:1";
+//		motorName = "ehrpwm.2\:1";
 
 	} else if (motorNumber == 3) {
 		//EHRPWM1A mode6 gpmc_a2 = ehrpwm.1:0
 		set_mux_value("gpmc_a2", 6);
-		motorName = "ehrpwm.1\:0";
+//		motorName = "ehrpwm.1\:0";
 
 	} else if (motorNumber == 4) {
 		//EHRPWM1B mode6 gpmc_a3 = ehrpwm.1.1
 		set_mux_value("gpmc_a3", 6);
-		motorName = "ehrpwm.1\:1";
+//		motorName = "ehrpwm.1\:1";
 
 	} else {
 		printf("Motor number must be an integer 1, 2, 3, or 4");

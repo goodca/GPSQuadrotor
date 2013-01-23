@@ -140,7 +140,7 @@ void Control::controlRun() {
 			double Yangle;
 			Yangle = desiredXvelocity - this->realData->getXVelocity();
 
-			void updateRequestedAngle(Xangle, Yangle, this->requestedZAngle,
+			updateRequestedAngle(Xangle, Yangle, this->requestedZAngle,
 					thrustFactor);
 			this->controlCycle();
 

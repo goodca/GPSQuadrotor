@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <sys/time.h>
 
 
 namespace std {
@@ -30,10 +31,14 @@ private:
 	int channel;
 	int gpio;
 	int timeout;
+	timeval starttime;
+	timeval endtime;
+	double PercentAmount;
 	void export_gpio();
 	int set_mux_value(char* mux, int value);
-	int set_gpio_direction(char* direction);
+	int set_gpio_direction(int direction); //0 means in, 1 means out
 	void set_gpio_edge(char* edge);
+	int gpio_fd_open();
 	void pollInputThread();
 };
 

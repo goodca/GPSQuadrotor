@@ -44,7 +44,7 @@ all: Quadrotor
 Quadrotor: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "Quadrotor" $(OBJS) $(USER_OBJS) $(LIBS)
+	/usr/local/angstrom/arm/bin/arm-angstrom-linux-gnueabi-g++ -L/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/lib/ -o "Quadrotor" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
