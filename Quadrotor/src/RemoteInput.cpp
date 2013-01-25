@@ -54,9 +54,10 @@ void RemoteInput::pollInputThread() {
 	gpio_fd = gpio_fd_open();
 
 	timeout = TIMEOUT;
-	this->minTime = 10000;
+	this->minTime = 1200;
 
-	this->maxTime = -3;
+	this->maxTime = 1750;
+	averagedPeriod = minTime;
 
 	while (1) {
 		memset((void*) fdset, 0, sizeof(fdset));
@@ -105,38 +106,45 @@ void RemoteInput::pollInputThread() {
 							+ this->endtime.tv_usec)
 							- (1000000 * this->starttime.tv_sec
 									+ this->starttime.tv_usec);
-					this->PercentAmount = (timechange - minTime)
-							/ ((maxTime - minTime) / 100);
-				printf("low\n total time=%f\n percent=%f\n", timechange,this->PercentAmount);
 
-					if (timechange > this->maxTime) {
-						printf("timechange: %f maxtime was: %f\n", timechange,
-								maxTime);
-						this->maxTime = timechange;
-						printf("timechange: %f maxtime is now: %f\n",
-								timechange, maxTime);
 
-					}
-					if (timechange < this->minTime) {
-						printf("timechange: %f mintime was: %f\n", timechange,
-								minTime);
-						if(timechange > 0){
-							this->minTime = timechange;
+					if ((timechange > MIN_LEGIT_PERIOD_US)
+							&& (timechange < MAX_LEGIT_PERIOD_US)) {
+						averagedPeriod += (timechange - averagedPeriod)
+								/ FRAC_SAMPLE_TO_AVERAGE;
+
+						if (averagedPeriod > this->maxTime) {
+							printf("timechange: %f maxtime was: %f\n",
+									timechange, maxTime);
+							this->maxTime = timechange;
+							printf("timechange: %f maxtime is now: %f\n",
+									timechange, maxTime);
+
 						}
-						printf("timechange: %f mintime is now %f\n", timechange,
-								minTime);
-					}
-					if (timechange > 1500) {
+						if (averagedPeriod < this->minTime) {
+							printf("timechange: %f mintime was: %f\n",
+									timechange, minTime);
+							if (timechange > 0) {
+								this->minTime = timechange;
+							}
+							printf("timechange: %f mintime is now %f\n",
+									timechange, minTime);
+						}
+						if (timechange > 1500) {
 //					printf("over 50%!\n");
+						}
+						this->PercentAmount = (timechange - minTime)
+								/ ((maxTime - minTime) / 100);
 					}
-
+					printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n", timechange,
+												this->PercentAmount, averagedPeriod, minTime, maxTime);
 //				printf("low\n total time=%f\n percent=%f\n", timechange,
 //						this->PercentAmount);
 //				printf("max is %f, min is %f\n", this->minTime, this->maxTime);
 
 				}
 			} else {
-				printf("apparently you screwed up, we got: %c\n", buf[0]);
+//				printf("Invalid result, but we got: %c\n", buf[0]);
 			}
 
 		}

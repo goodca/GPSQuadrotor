@@ -31,6 +31,7 @@ private:
 	FILE *valuefp;
 	double minTime;
 	double maxTime;
+	double averagedPeriod;
 
 	int channel;
 	int gpio;
@@ -48,6 +49,10 @@ private:
 
 #define MAX_BUF 127
 #define TIMEOUT 5000
+#define MIN_LEGIT_PERIOD_US 900
+#define MAX_LEGIT_PERIOD_US 2100
+#define MIDDLE_PERIOD_US 1500
+#define FRAC_SAMPLE_TO_AVERAGE 25
 
 } /* namespace std */
 #endif /* REMOTEINPUT_H_ */
