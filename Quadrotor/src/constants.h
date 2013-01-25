@@ -8,7 +8,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-#define SleepTime 1000
+#define SleepTime 25000
 
 #define OuterXKp .0001
 #define OuterXKi .0001
