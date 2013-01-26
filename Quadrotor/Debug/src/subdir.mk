@@ -16,6 +16,7 @@ CPP_SRCS += \
 ../src/PID.cpp \
 ../src/Quadrotor.cpp \
 ../src/RemoteInput.cpp \
+../src/Remotehandler.cpp \
 ../src/Sensors.cpp \
 ../src/Waypoint.cpp \
 ../src/i2c.cpp 
@@ -36,6 +37,7 @@ OBJS += \
 ./src/PID.o \
 ./src/Quadrotor.o \
 ./src/RemoteInput.o \
+./src/Remotehandler.o \
 ./src/Sensors.o \
 ./src/Waypoint.o \
 ./src/i2c.o \
@@ -57,6 +59,7 @@ CPP_DEPS += \
 ./src/PID.d \
 ./src/Quadrotor.d \
 ./src/RemoteInput.d \
+./src/Remotehandler.d \
 ./src/Sensors.d \
 ./src/Waypoint.d \
 ./src/i2c.d 

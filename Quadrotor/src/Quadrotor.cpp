@@ -55,7 +55,7 @@ int main() {
 //	sense->stopThread();
 
 	RemoteInput *remote = new RemoteInput;
-	remote->start(1, 38);
+
 
 	sleep(40);
 	return 0;

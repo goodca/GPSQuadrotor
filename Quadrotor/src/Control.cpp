@@ -10,6 +10,7 @@
 #include "constants.h"
 #include "Sensors.h"
 #include "PID.h"
+#include "Remotehandler.h"
 #include <time.h>
 #include <unistd.h>
 
@@ -114,7 +115,11 @@ void Control::controlCycle() {
 void Control::controlRun() {
 
 	this->controlStart();
+
+	this->remotecontrol->getch1();
+
 	while (1) {
+		this->updateRequestedAngle(this->remotecontrol->getch1()-50,this->remotecontrol->getch2()-50,this->remotecontrol->getch3(),(this->remotecontrol->getch4()-50)/400+this->realData->getZAngle());
 		if (remote) {
 			this->controlCycle();
 			usleep(SleepTime);
@@ -201,6 +206,8 @@ void Control::controlStart() {
 	this->InnerThrust = new PID(0, 0, 0, 0, 0, timestart, InnerThrustKp,
 			InnerThrustKi, InnerThrustKd);
 
+	this->remotecontrol = new Remotehandler();
+
 	this->Motor1 = new Motor();
 	Motor1->init(1);
 	this->Motor2 = new Motor();
@@ -209,6 +216,8 @@ void Control::controlStart() {
 	Motor3->init(3);
 	this->Motor4 = new Motor();
 	Motor4->init(4);
+
+	sleep(2);//sleep<---------------------------
 }
 
 Control::~Control() {

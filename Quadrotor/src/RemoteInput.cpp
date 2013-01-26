@@ -15,7 +15,7 @@ RemoteInput::RemoteInput() {
 	return;
 }
 
-void RemoteInput::start(int remoteChannel, int gpioInput) {
+void RemoteInput::start(int remoteChannel) {
 	timesBeforeReliable = 100;
 	channel = remoteChannel;
 	if (channel == 1) {
@@ -26,141 +26,150 @@ void RemoteInput::start(int remoteChannel, int gpioInput) {
 
 		printf("Set gpio to %d\n", gpio);
 	}
-	gpio = gpioInput;
-	printf("Gpio = %d\n", gpio);
-	printf("Gpio = %d last in start before poll function\n", gpio);
-	printf("Starting to poll\n");
-	pollInputThread();
+
+
+
+	pthread_create(&remoteThread_t, 0, &RemoteInput::start_thread, this);
 
 	return;
 }
 
-void RemoteInput::pollInputThread() {
+double RemoteInput::get_percent_amount(){
+
+	return this->PercentAmount;
+
+}
+
+void RemoteInput::remoteThread(void *obj) {
+	RemoteInput *remote = (RemoteInput*) obj;
+	remote->update();
+
+}
+void RemoteInput::update(){
 	struct pollfd fdset[2];
-	int nfds = 2;
-	int gpio_fd, timeout, rc;
-	char buf[MAX_BUF];
-	unsigned int gpio;
-	int len;
+		int nfds = 2;
+		int gpio_fd, timeout, rc;
+		char buf[MAX_BUF];
+		unsigned int gpio;
+		int len;
 
-	// Set the signal callback for Ctrl-C
-//		signal(SIGINT, signal_handler);
+		// Set the signal callback for Ctrl-C
+	//		signal(SIGINT, signal_handler);
 
-//		gpio = atoi(argv[1]);
+	//		gpio = atoi(argv[1]);
 
-	export_gpio();
-	set_gpio_direction(0);
-	set_gpio_edge("both"); // Can be rising, falling or both
-	gpio_fd = gpio_fd_open();
+		export_gpio();
+		set_gpio_direction(0);
+		set_gpio_edge("both"); // Can be rising, falling or both
+		gpio_fd = gpio_fd_open();
 
-	timeout = TIMEOUT;
-	this->minTime = 1200;
+		timeout = TIMEOUT;
+		this->minTime = 1200;
 
-	this->maxTime = 1750;
-	averagedPeriod = minTime;
+		this->maxTime = 1750;
+		averagedPeriod = minTime;
 
-	while (1) {
-		memset((void*) fdset, 0, sizeof(fdset));
+		while (1) {
+			memset((void*) fdset, 0, sizeof(fdset));
 
-		fdset[0].fd = STDIN_FILENO;
-		fdset[0].events = POLLIN;
+			fdset[0].fd = STDIN_FILENO;
+			fdset[0].events = POLLIN;
 
-		fdset[1].fd = gpio_fd;
-		fdset[1].events = POLLPRI;
+			fdset[1].fd = gpio_fd;
+			fdset[1].events = POLLPRI;
 
-		rc = poll(fdset, nfds, timeout);
+			rc = poll(fdset, nfds, timeout);
 
-		if (rc < 0) {
-			printf("\npoll() failed!\n");
-			return;
-		}
-
-		if (rc == 0) {
-			printf(".");
-		}
-
-		if (fdset[1].revents & POLLPRI) {
-			lseek(fdset[1].fd, 0, SEEK_SET); // Read from the start of the file
-			len = read(fdset[1].fd, buf, MAX_BUF);
-//			printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n", gpio, buf[0], len);
-//			printf("the read gives: %c\n", buf[0]);
-
-			char buf2[MAX_BUF];
-			char buf3[MAX_BUF];
-			buf2[0] = '0';
-			buf3[0] = '1';
-//				char value = *buf[0];
-
-			if (buf[0] == '1') {
-
-				gettimeofday(&this->starttime, NULL);
-//				printf("high\n");
-
-			} else if (buf[0] == '0') {
-				if (timesBeforeReliable >= 0) {
-					timesBeforeReliable--;
-				}
-				{
-					gettimeofday(&this->endtime, NULL);
-					double timechange = (1000000 * this->endtime.tv_sec
-							+ this->endtime.tv_usec)
-							- (1000000 * this->starttime.tv_sec
-									+ this->starttime.tv_usec);
-
-
-					if ((timechange > MIN_LEGIT_PERIOD_US)
-							&& (timechange < MAX_LEGIT_PERIOD_US)) {
-						averagedPeriod += (timechange - averagedPeriod)
-								/ FRAC_SAMPLE_TO_AVERAGE;
-
-						if (averagedPeriod > this->maxTime) {
-							printf("timechange: %f maxtime was: %f\n",
-									timechange, maxTime);
-							this->maxTime = timechange;
-							printf("timechange: %f maxtime is now: %f\n",
-									timechange, maxTime);
-
-						}
-						if (averagedPeriod < this->minTime) {
-							printf("timechange: %f mintime was: %f\n",
-									timechange, minTime);
-							if (timechange > 0) {
-								this->minTime = timechange;
-							}
-							printf("timechange: %f mintime is now %f\n",
-									timechange, minTime);
-						}
-						if (timechange > 1500) {
-//					printf("over 50%!\n");
-						}
-						this->PercentAmount = (timechange - minTime)
-								/ ((maxTime - minTime) / 100);
-					}
-					printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n", timechange,
-												this->PercentAmount, averagedPeriod, minTime, maxTime);
-//				printf("low\n total time=%f\n percent=%f\n", timechange,
-//						this->PercentAmount);
-//				printf("max is %f, min is %f\n", this->minTime, this->maxTime);
-
-				}
-			} else {
-//				printf("Invalid result, but we got: %c\n", buf[0]);
+			if (rc < 0) {
+				printf("\npoll() failed!\n");
+				return;
 			}
 
+			if (rc == 0) {
+				printf(".");
+			}
+
+			if (fdset[1].revents & POLLPRI) {
+				lseek(fdset[1].fd, 0, SEEK_SET); // Read from the start of the file
+				len = read(fdset[1].fd, buf, MAX_BUF);
+	//			printf("\npoll() GPIO %d interrupt occurred, value=%c, len=%d\n", gpio, buf[0], len);
+	//			printf("the read gives: %c\n", buf[0]);
+
+				char buf2[MAX_BUF];
+				char buf3[MAX_BUF];
+				buf2[0] = '0';
+				buf3[0] = '1';
+	//				char value = *buf[0];
+
+				if (buf[0] == '1') {
+
+					gettimeofday(&this->starttime, NULL);
+	//				printf("high\n");
+
+				} else if (buf[0] == '0') {
+					if (timesBeforeReliable >= 0) {
+						timesBeforeReliable--;
+					}
+					{
+						gettimeofday(&this->endtime, NULL);
+						double timechange = (1000000 * this->endtime.tv_sec
+								+ this->endtime.tv_usec)
+								- (1000000 * this->starttime.tv_sec
+										+ this->starttime.tv_usec);
+
+
+						if ((timechange > MIN_LEGIT_PERIOD_US)
+								&& (timechange < MAX_LEGIT_PERIOD_US)) {
+							averagedPeriod += (timechange - averagedPeriod)
+									/ FRAC_SAMPLE_TO_AVERAGE;
+
+							if (averagedPeriod > this->maxTime) {
+								printf("timechange: %f maxtime was: %f\n",
+										timechange, maxTime);
+								this->maxTime = timechange;
+								printf("timechange: %f maxtime is now: %f\n",
+										timechange, maxTime);
+
+							}
+							if (averagedPeriod < this->minTime) {
+								printf("timechange: %f mintime was: %f\n",
+										timechange, minTime);
+								if (timechange > 0) {
+									this->minTime = timechange;
+								}
+								printf("timechange: %f mintime is now %f\n",
+										timechange, minTime);
+							}
+							if (timechange > 1500) {
+	//					printf("over 50%!\n");
+							}
+							this->PercentAmount = (timechange - minTime)
+									/ ((maxTime - minTime) / 100);
+						}
+						printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n", timechange,
+													this->PercentAmount, averagedPeriod, minTime, maxTime);
+	//				printf("low\n total time=%f\n percent=%f\n", timechange,
+	//						this->PercentAmount);
+	//				printf("max is %f, min is %f\n", this->minTime, this->maxTime);
+
+					}
+				} else {
+	//				printf("Invalid result, but we got: %c\n", buf[0]);
+				}
+
+			}
+
+			if (fdset[0].revents & POLLIN) {
+				(void) read(fdset[0].fd, buf, 1);
+				printf("\npoll() stdin read 0x%2.2s\n", buf[0]);
+			}
+
+			fflush(stdout);
 		}
 
-		if (fdset[0].revents & POLLIN) {
-			(void) read(fdset[0].fd, buf, 1);
-			printf("\npoll() stdin read 0x%2.2s\n", buf[0]);
-		}
-
-		fflush(stdout);
-	}
-
-	close(gpio_fd);
-	return;
+		close(gpio_fd);
+		return;
 }
-
 int RemoteInput::gpio_fd_open() {
 	printf("Gpio = %d gpio_fd_open\n", gpio);
 	int fd, len;

@@ -11,11 +11,13 @@
 #include <time.h>
 #include "Sensors.h"
 #include "PID.h"
+#include "Remotehandler.h"
 
 namespace std{
 
 class Control {
 
+private:
 	int remote;
 
 	double thrust;
@@ -49,27 +51,25 @@ class Control {
     PID *Xvelocity;
     PID *Yvelocity;
 
-
+    Remotehandler *remotecontrol;
 
 	Motor *Motor1;
 	Motor *Motor2;
 	Motor *Motor3;
 	Motor *Motor4;
 
+	void controlCycle();
+	void updateRequestedAngle(double xAngle, double yAngle, double zAngle, double thrust);
+	void setRemote(int on);
+	void controlStart();
+
+
 public:
 	Control(Sensors * data);
 
-	void updateRequestedAngle(double xAngle, double yAngle, double zAngle, double thrust);
 
 	void UpdateRequestedVelocity(double Xspeed, double yspeed, double zspeed, double zAngle);
 
-	void getSensorClass(Sensors sense);
-
-	void setRemote(int on);
-
-	void controlCycle();
-
-	void controlStart();
 
 	void controlRun();
 
