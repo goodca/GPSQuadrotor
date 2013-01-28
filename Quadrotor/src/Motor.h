@@ -27,6 +27,7 @@ private:
 	int set_mux_value(char* mux, int value);
 	int motor;
 	char* motorName;
+	char* motorChan;
 
 	double power;
 	int motorNum;

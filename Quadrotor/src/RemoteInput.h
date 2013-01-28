@@ -60,6 +60,10 @@ private:
 #define MAX_LEGIT_PERIOD_US 2100
 #define MIDDLE_PERIOD_US 1500
 #define FRAC_SAMPLE_TO_AVERAGE 25
+#define GPIO1 38
+#define GPIO2 39
+#define GPIO3 34
+#define GPIO4 35
 
 } /* namespace std */
 #endif /* REMOTEINPUT_H_ */

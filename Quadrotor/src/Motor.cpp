@@ -14,31 +14,38 @@ void Motor::init(int motorNumber) {
 	motorNum = motorNumber;
 	if (motorNumber == 1) {
 		//GPIO2_6 mode3 lcd_data0 = ehrpwm.2:0
+
 		set_mux_value("lcd_data0", 3);
-//		motorName = "ehrpwm.2\:0";
+		motorName = "ehrpwm.2";
+//motorName	= ['e', 'h', 'r', 'p', 'w', 'm', '.', '2', '\', ':', '0'];
+		motorChan = ":0";
 
 	} else if (motorNumber == 2) {
 		//GPIO2_7 mode3 lcd_data1 = ehrpwm.2:1
 		set_mux_value("lcd_data1", 3);
-//		motorName = "ehrpwm.2\:1";
+		motorName = "ehrpwm.2";
+		motorChan = ":1";
 
 	} else if (motorNumber == 3) {
 		//EHRPWM1A mode6 gpmc_a2 = ehrpwm.1:0
 		set_mux_value("gpmc_a2", 6);
-//		motorName = "ehrpwm.1\:0";
+		motorName = "ehrpwm.1";
+		motorChan = ":0";
 
 	} else if (motorNumber == 4) {
 		//EHRPWM1B mode6 gpmc_a3 = ehrpwm.1.1
 		set_mux_value("gpmc_a3", 6);
-//		motorName = "ehrpwm.1\:1";
+		motorName = "ehrpwm.1";
+		motorChan = ":1";
 
 	} else {
 		printf("Motor number must be an integer 1, 2, 3, or 4");
 		return;
 	}
 
-	//tell pwm to run
-	snprintf(path, sizeof path, "/sys/class/pwm/%s/run", motorName);
+//tell pwm to run
+	snprintf(path, sizeof path, "/sys/class/pwm/%s\%s/run", motorName,
+			motorChan);
 
 	if ((fp = fopen(path, "w")) == NULL) {
 		printf("Cannot open pwm run file, %s\n", path);
@@ -49,7 +56,7 @@ void Motor::init(int motorNumber) {
 	fprintf(fp, "1\n");
 	fclose(fp);
 	//set frequency
-	snprintf(path, sizeof path, "/sys/class/pwm/%s/period_freq", motorName);
+	snprintf(path, sizeof path, "/sys/class/pwm/%s\%s/period_freq", motorName, motorChan);
 
 	if ((fp = fopen(path, "w")) == NULL) {
 		printf("Cannot open pwm period_freq file, %s\n", path);
@@ -62,7 +69,7 @@ void Motor::init(int motorNumber) {
 
 	//set to min value
 	//set the file pointer to the period time
-	snprintf(path, sizeof path, "/sys/class/pwm/%s/duty_ns", motorName);
+	snprintf(path, sizeof path, "/sys/class/pwm/%s\%s/duty_ns", motorName, motorChan);
 
 	if ((fp = fopen(path, "w")) == NULL) {
 		printf("Cannot open pwm duty_ns file, %s\n", path);

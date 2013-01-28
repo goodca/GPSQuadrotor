@@ -10,13 +10,13 @@
 
 #include "RemoteInput.h"
 
-#define remoteChannel1 38
+#define remoteChannel1 1
 
-#define remoteChannel2 38
+#define remoteChannel2 2
 
-#define remoteChannel3 38
+#define remoteChannel3 3
 
-#define remoteChannel4 38
+#define remoteChannel4 4
 
 namespace std {
 
