@@ -8,6 +8,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+//control constants
 #define SleepTime 25000
 
 #define OuterXKp .0001
@@ -41,7 +42,34 @@
 #define InnerThrustKp .0001
 #define InnerThrustKi .0001
 #define InnerThrustKd .01
+//GPSNavigator constants
 
+#define	zAngleKp .0001
+#define	zAngleKi .0001
+#define	zAngleKd .01
 
+#define xLocationInnerKp .0001
+#define xLocationInnerKi .0001
+#define xLocationInnerKd .01
+
+#define xLocationOuterKp .0001
+#define xLocationOuterKi .0001
+#define xLocationOuterKd .01
+
+#define yLocationInnerKp .0001
+#define yLocationInnerKi .0001
+#define yLocationInnerKd .01
+
+#define yLocationOuterKp .0001
+#define yLocationOuterKi .0001
+#define yLocationOuterKd .01
+
+#define zLocationInnerKp .0001
+#define zLocationInnerKi .0001
+#define zLocationInnerKd .01
+
+#define zLocationOuterKp .0001
+#define zLocationOuterKi .0001
+#define zLocationOuterKd .01
 
 #endif /* CONSTANTS_H_ */

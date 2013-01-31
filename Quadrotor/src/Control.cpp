@@ -21,6 +21,7 @@ Control::Control(Sensors * data) {
 
 }
 
+
 void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 		double thrust) {
 
@@ -116,11 +117,13 @@ void Control::controlRun() {
 
 	this->controlStart();
 
-	this->remotecontrol->getch1();
-
 	while (1) {
-		this->updateRequestedAngle(this->remotecontrol->getch1()-50,this->remotecontrol->getch2()-50,this->remotecontrol->getch3(),(this->remotecontrol->getch4()-50)/400+this->realData->getZAngle());
 		if (remote) {
+			this->updateRequestedAngle(this->remotecontrol->getch1() - 50,
+					this->remotecontrol->getch2() - 50,
+					this->remotecontrol->getch3(),
+					(this->remotecontrol->getch4() - 50) / 400
+							+ this->realData->getZAngle());
 			this->controlCycle();
 			usleep(SleepTime);
 		} else {
@@ -166,11 +169,7 @@ void Control::UpdateRequestedVelocity(double Xspeed, double Yspeed,
 	this->requestedZAngle = zAngle;
 }
 
-void Control::setRemote(int on) {
 
-	this->remote = on;
-
-}
 
 void Control::controlStart() {
 
@@ -217,7 +216,7 @@ void Control::controlStart() {
 	this->Motor4 = new Motor();
 	Motor4->init(4);
 
-	sleep(2);//sleep<---------------------------
+	sleep(2); //sleep<---------------------------
 }
 
 Control::~Control() {
