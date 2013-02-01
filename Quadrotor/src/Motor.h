@@ -45,5 +45,6 @@ private:
 #define FREQUENCY 50
 #define MIN_HIGH_TIME_NS 1000000
 #define MAX_HIGH_TIME_NS 2000000
+#define PERIOD_NS 20000000
 
 #endif /* MOTOR_H_ */

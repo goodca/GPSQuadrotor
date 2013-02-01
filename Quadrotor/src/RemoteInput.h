@@ -48,6 +48,7 @@ private:
 	void set_gpio_edge(char* edge);
 	int gpio_fd_open();
 	void remoteThread(void *obj);
+	void calculateTimeSincePulseStart();
 	static void * start_thread(void *obj) {
 		reinterpret_cast<RemoteInput *>(obj)->remoteThread(obj);
 		return 0;

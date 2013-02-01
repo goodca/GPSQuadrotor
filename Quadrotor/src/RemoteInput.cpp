@@ -29,17 +29,17 @@ void RemoteInput::start(int remoteChannel) {
 		name = "gpmc_ad7";
 		gpio = GPIO2;
 		//		set_mux_value(name, 7);
-	} else if (channel == 1) {
+	} else if (channel == 3) {
 		char* name;
 		name = "gpmc_ad2";
 		gpio = GPIO3;
 		//		set_mux_value(name, 7);
-	} else if (channel == 1) {
+	} else if (channel == 4) {
 		char* name;
 		name = "gpmc_ad3";
 		gpio = GPIO4;
 		//		set_mux_value(name, 7);
-	}else{
+	} else {
 		printf("INVALID CHANEL\n");
 	}
 
@@ -55,8 +55,50 @@ double RemoteInput::get_percent_amount() {
 }
 
 void RemoteInput::remoteThread(void *obj) {
-	RemoteInput *remote = (RemoteInput*) obj;
+	RemoteInput *remote = (RemoteInput*) (obj);
 	remote->update();
+}
+
+void RemoteInput::calculateTimeSincePulseStart() {
+	if (timesBeforeReliable >= 0) {
+		timesBeforeReliable--;
+	}
+	gettimeofday(&this->endtime, NULL);
+	double timechange = (1000000 * this->endtime.tv_sec + this->endtime.tv_usec)
+			- (1000000 * this->starttime.tv_sec + this->starttime.tv_usec);
+	if ((timechange > MIN_LEGIT_PERIOD_US)
+			&& (timechange < MAX_LEGIT_PERIOD_US)) {
+		averagedPeriod += (timechange - averagedPeriod) / FRAC_SAMPLE_TO_AVERAGE;
+
+		if (averagedPeriod > this->maxTime) {
+			printf("timechange: %f maxtime was: %f\n", timechange, maxTime);
+			this->maxTime = timechange;
+			printf("timechange: %f maxtime is now: %f\n", timechange, maxTime);
+
+		}
+		if (averagedPeriod < this->minTime) {
+			printf("timechange: %f mintime was: %f\n", timechange, minTime);
+			if (timechange > 0) {
+				this->minTime = timechange;
+			}
+			printf("timechange: %f mintime is now %f\n", timechange, minTime);
+		}
+		if (timechange > 1500) {
+			//					printf("over 50%!\n");
+		}
+
+		if (averagedPeriod >= MIDDLE_PERIOD_US) {
+			this->PercentAmount = 50
+					+ 50 * (averagedPeriod - MIDDLE_PERIOD_US)
+							/ ((maxTime - MIDDLE_PERIOD_US));
+		} else {
+			this->PercentAmount = 50 * (averagedPeriod - minTime)
+					/ ((MIDDLE_PERIOD_US - minTime));
+		}
+
+	}
+	printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n",
+			timechange, this->PercentAmount, averagedPeriod, minTime, maxTime);
 
 }
 void RemoteInput::update() {
@@ -117,67 +159,11 @@ void RemoteInput::update() {
 			//				char value = *buf[0];
 
 			if (buf[0] == '1') {
-
-				gettimeofday(&this->starttime, NULL);
-				//				printf("high\n");
+				calculateTimeSincePulseStart();
 
 			} else if (buf[0] == '0') {
-				if (timesBeforeReliable >= 0) {
-					timesBeforeReliable--;
-				}
-				{
-					gettimeofday(&this->endtime, NULL);
-					double timechange = (1000000 * this->endtime.tv_sec
-							+ this->endtime.tv_usec)
-							- (1000000 * this->starttime.tv_sec
-									+ this->starttime.tv_usec);
-
-					if ((timechange > MIN_LEGIT_PERIOD_US)
-							&& (timechange < MAX_LEGIT_PERIOD_US)) {
-						averagedPeriod += (timechange - averagedPeriod)
-								/ FRAC_SAMPLE_TO_AVERAGE;
-
-						if (averagedPeriod > this->maxTime) {
-							printf("timechange: %f maxtime was: %f\n",
-									timechange, maxTime);
-							this->maxTime = timechange;
-							printf("timechange: %f maxtime is now: %f\n",
-									timechange, maxTime);
-
-						}
-						if (averagedPeriod < this->minTime) {
-							printf("timechange: %f mintime was: %f\n",
-									timechange, minTime);
-							if (timechange > 0) {
-								this->minTime = timechange;
-							}
-							printf("timechange: %f mintime is now %f\n",
-									timechange, minTime);
-						}
-						if (timechange > 1500) {
-							//					printf("over 50%!\n");
-						}
-
-						if (averagedPeriod >= MIDDLE_PERIOD_US) {
-							this->PercentAmount = 50
-									+ 50 * (averagedPeriod - MIDDLE_PERIOD_US)
-											/ ((maxTime - MIDDLE_PERIOD_US));
-						} else {
-							this->PercentAmount = 50
-									* (averagedPeriod - minTime)
-									/ ((MIDDLE_PERIOD_US - minTime));
-						}
-
-					}
-					printf(
-							"total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n",
-							timechange, this->PercentAmount, averagedPeriod,
-							minTime, maxTime);
-					//				printf("low\n total time=%f\n percent=%f\n", timechange,
-					//						this->PercentAmount);
-					//				printf("max is %f, min is %f\n", this->minTime, this->maxTime);
-
-				}
+				gettimeofday(&this->starttime, NULL);
+				//				printf("high\n");
 			} else {
 				//				printf("Invalid result, but we got: %c\n", buf[0]);
 			}

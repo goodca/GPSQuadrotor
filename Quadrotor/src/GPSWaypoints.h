@@ -8,6 +8,7 @@
 #ifndef GPSWAYPOINTS_H_
 #define GPSWAYPOINTS_H_
 
+#include "Waypoint.h"
 
 
 namespace std {
