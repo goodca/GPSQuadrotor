@@ -21,11 +21,15 @@ void Sensors::startSensorsThreads() {
 	imu->startIMUThread();
 	usleep(100000);
 	comp = new Compass;
-//	comp->startCompassThread();
-//	usleep(100000);
+	comp->startCompassThread();
+	usleep(100000);
 	gps = new GPS;
 //	gps->startGPSThread();
 	usleep(100000);
+	range = new RangeFinder;
+	range->start();
+	usleep(100000);
+
 
 	//start main sensor thread
 	pthread_create(&sensorsThread_t, 0, &Sensors::start_thread, this);
@@ -232,7 +236,9 @@ double Sensors::getLongtitude(){
 double Sensors::getHeight(){
 	return 0;
 }
-
+double Sensors::getRelativeHeight(){
+	return range->getDistance();
+}
 Sensors::~Sensors() {
 	// TODO Auto-generated destructor stub
 }

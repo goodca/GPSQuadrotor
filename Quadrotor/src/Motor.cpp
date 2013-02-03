@@ -87,8 +87,8 @@ void Motor::setPower(double newPower) {
 		power = 0;
 	}
 	double highTime;
-	highTime = PERIOD_NS - (MAX_HIGH_TIME_NS - MIN_HIGH_TIME_NS)
-			* (power / 100)+ MIN_HIGH_TIME_NS;
+	highTime = PERIOD_NS - ((MAX_HIGH_TIME_NS - MIN_HIGH_TIME_NS)
+			* (power / 100)+ MIN_HIGH_TIME_NS);
 	set_pwm((int) highTime);
 }
 

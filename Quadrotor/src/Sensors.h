@@ -18,6 +18,7 @@
 #include <unistd.h>     /*Enables use of open(), read(), write()*/
 #include <stdio.h>
 #include <pthread.h>
+#include "RangeFinder.h"
 
 namespace std {
 
@@ -46,8 +47,8 @@ public:
 	double getZAcceleration(); //in meters/second^2
 	double getLatitude(); //in degrees
 	double getLongtitude(); //in degrees
-	double getHeight(); //not sure on units yet
-	double getHeading();
+	double getHeight(); //in meters from sea level
+	double getRelativeHeight(); //in meters from ground. Will have a max and min eventually
 
 	void startSensorsThreads();
 	int getThreadRunning();
@@ -57,6 +58,7 @@ private:
 	int threadRunning;
 	pthread_t sensorsThread_t;
 
+	RangeFinder *range;
 	Compass *comp;
 	GPS *gps;
 	IMU *imu;

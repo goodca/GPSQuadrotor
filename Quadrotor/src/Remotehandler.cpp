@@ -21,9 +21,13 @@ Remotehandler::Remotehandler() {
 	this->ch4= new RemoteInput();
 
 	this->ch1->start(remoteChannel1);
+	usleep(10000);
 	this->ch2->start(remoteChannel2);
+	usleep(10000);
 	this->ch3->start(remoteChannel3);
+	usleep(10000);
 	this->ch4->start(remoteChannel4);
+	usleep(10000);
 
 
 }

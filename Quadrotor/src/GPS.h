@@ -35,6 +35,11 @@ public:
 	int getThreadRunning();
 	void stopThread();
 	void update();
+	double getLatitude();			//in degrees
+	double getLongtitude();			//in degrees
+	double getHeight();				//in meters from sea level
+	double getSpeed();				//in meters per second
+	double getDirectionHeading();	//degrees from north
 
 private:
 	void getGPSData();
@@ -48,6 +53,16 @@ private:
 		int valid;
 	} dataGPS;
 
+	double time;
+	double speedKnots;
+	double courseOverGround;
+	int date;
+	char latpos;
+	char longpos;
+	char isValid;
+	double latitude;
+	double longtitude;
+
 	int threadRunning;
 	pthread_t gpsThread_t;
 	void gpsThread(void *obj);
@@ -56,6 +71,8 @@ private:
 		return 0;
 	}
 };
+
+#define KNOTS_TO_METERS 0;
 
 } /* namespace std */
 #endif /* GPS_H_ */

@@ -97,58 +97,43 @@ void GPS::init() {
 }
 
 void GPS::getCalculateLine() {
-
-	char start[20];
-	dataGPS temp;
-	temp.x = 0;
-	temp.y = 0;
-	temp.time = 0;
-	temp.valid = 1;
-	double speedKnots;
-	double courseOverGround;
-	int date;
-	char latpos;
-	char longpos;
-	char isValid;
 	char data[100] = { 0 };
 
 	if (!(read(serial_file, data, 100) > 0)) {
 		//fprintf(stderr, "Failed to read GPS: %m\n");
 		printf("Failed to read GPS\n");
 	}
-	sscanf(data, ",%f, %c, %lf, %c, %lf, %c, %lf, %lf, $d,", &temp.time,
-			&isValid, &temp.y, &latpos, &temp.x, &longpos, &speedKnots,
-			&courseOverGround, &date);
-	if (temp.x == 0) {
-		temp.valid = 0;
+	double tempx, tempy;
+	sscanf(data, ",%lf, %c, %lf, %c, %lf, %c, %lf, %lf, %d,", &time, &isValid,
+			&tempy, &latpos, &tempx, &longpos, &speedKnots, &courseOverGround,
+			&date);
+	if (tempx == 0) {
+		isValid = 0;
 		printf("Data is not yet valid\n");
 	} else {
 		if (latpos == 'S')
-			temp.y = -temp.y;
+			tempy = -tempy;
 		if (longpos == 'W')
-			temp.x = -temp.x;
+			tempx = -tempx;
 
-		temp.x = (int) temp.x / 100
-				+ ((int) temp.x % 100 + temp.x - (int) temp.x) / 60.0;
-		temp.y = (int) temp.y / 100
-				+ ((int) temp.y % 100 + temp.y - (int) temp.y) / 60.0;
-		temp.valid = 1;
-//		printf(
-//				"CORRECTED FORM\nLatitude: %f, Longtitude: %f\nSpeed in knots: %f course: %f\nSpeed in mph: %f\n",
-//				temp.y, temp.x, speedKnots, courseOverGround,
-//				speedKnots * 1.151);
+		longtitude = (int) tempx / 100
+				+ ((int) tempx % 100 + tempx - (int) tempx) / 60.0;
+		latitude = (int) tempy / 100
+				+ ((int) tempy % 100 + tempy - (int) tempy) / 60.0;
+
+		printf(
+				"CORRECTED FORM\nLatitude: %f, Longtitude: %f\nSpeed in knots: %f course: %f\nSpeed in mph: %f\n",
+				latitude, longtitude, speedKnots, courseOverGround,
+				speedKnots * 1.151);
 	}
 }
 
 void GPS::getGPSData() {
-
-//		char start[20] = { 0 };
-	char type[6] = { 0 };
 	char character[1];
 	char rightType[5] = { 'G', 'P', 'R', 'M', 'C' };
 	int right = false;
 	int i = 0;
-	while (true) {
+	while (threadRunning) {
 		if (!(read(serial_file, character, 1) > 0)) {
 			printf("Failed to read GPS\n");
 		}
@@ -226,6 +211,21 @@ void GPS::getGPSData() {
 //	temp.x = -87.322740;
 //	temp.y = 39.483990;
 	return;
+}
+double GPS::getLatitude() {
+	return latitude;
+}
+double GPS::getLongtitude() {
+	return longtitude;
+}
+double GPS::getHeight() {
+	return 0;
+}
+double GPS::getSpeed() {
+	return speedKnots * KNOTS_TO_METERS;
+}
+double GPS::getDirectionHeading(){
+	return courseOverGround;
 }
 
 GPS::~GPS() {

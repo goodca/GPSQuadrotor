@@ -25,6 +25,7 @@ class RangeFinder {
 public:
 	RangeFinder();
 	void start();
+	double getDistance(); //returns distance from ground in meters
 	virtual ~RangeFinder();
 
 private:
@@ -34,7 +35,8 @@ private:
 	timeval endtime;
 
 
-	int nfds, rc, gpio_fd, len, inches, threadRunning;
+	int nfds, rc, gpio_fd, len, threadRunning;
+	double meters, inches;
 	char buf[127];
 
 	void rangeFinderThread(void *obj);

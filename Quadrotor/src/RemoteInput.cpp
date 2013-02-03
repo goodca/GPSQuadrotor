@@ -36,11 +36,11 @@ void RemoteInput::start(int remoteChannel) {
 		//		set_mux_value(name, 7);
 	} else if (channel == 4) {
 		char* name;
-		name = "gpmc_ad3";
+		name = "gpmc_oen_ren";
 		gpio = GPIO4;
 		//		set_mux_value(name, 7);
 	} else {
-		printf("INVALID CHANEL\n");
+		printf("INVALID CHANNEL\n");
 	}
 
 	pthread_create(&remoteThread_t, 0, &RemoteInput::start_thread, this);
@@ -97,8 +97,8 @@ void RemoteInput::calculateTimeSincePulseStart() {
 		}
 
 	}
-	printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n",
-			timechange, this->PercentAmount, averagedPeriod, minTime, maxTime);
+//	printf("total time=%f percent=%f averagedTime = %f\nMin =%f Max = %f\n",
+//			timechange, this->PercentAmount, averagedPeriod, minTime, maxTime);
 
 }
 void RemoteInput::update() {
@@ -126,7 +126,7 @@ void RemoteInput::update() {
 	averagedPeriod = minTime;
 
 	while (1) {
-		printf("threadding lol\n");
+//		printf("threadding lol\n");
 		memset((void*) fdset, 0, sizeof(fdset));
 
 		fdset[0].fd = STDIN_FILENO;
