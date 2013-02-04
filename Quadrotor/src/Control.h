@@ -65,13 +65,13 @@ private:
 
 
 public:
-	Control(Sensors * data);
+	Control();
 
 
 	void UpdateRequestedVelocity(double Xspeed, double yspeed, double zspeed, double zAngle);
 
 
-	void controlRun();
+	void controlRun(Sensors * data);
 
 
 	virtual ~Control();

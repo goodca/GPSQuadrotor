@@ -11,37 +11,37 @@
 //control constants
 #define SleepTime 25000
 
-#define OuterXKp .0001
-#define OuterXKi .0001
-#define OuterXKd .01
+#define OuterXKp .5
+#define OuterXKi .000000001
+#define OuterXKd .1
 
-#define InnerXKp .0001
-#define InnerXKi .0001
-#define InnerXKd .01
+#define InnerXKp .5
+#define InnerXKi .000000001
+#define InnerXKd .1
 
-#define OuterYKp .0001
-#define OuterYKi .0001
-#define OuterYKd .01
+#define OuterYKp .5
+#define OuterYKi .000000001
+#define OuterYKd .1
 
-#define InnerYKp .0001
-#define InnerYKi .0001
-#define InnerYKd .01
+#define InnerYKp .5
+#define InnerYKi .000000001
+#define InnerYKd .1
 
-#define OuterZKp .0001
-#define OuterZKi .0001
-#define OuterZKd .01
+#define OuterZKp .5
+#define OuterZKi .000000001
+#define OuterZKd .1
 
-#define InnerZKp .0001
-#define InnerZKi .0001
-#define InnerZKd .01
+#define InnerZKp .5
+#define InnerZKi .000000001
+#define InnerZKd .1
 
-#define OuterThrustKp .0001
-#define OuterThrustKi .0001
-#define OuterThrustKd .01
+#define OuterThrustKp .00001
+#define OuterThrustKi .0000001
+#define OuterThrustKd .0001
 
-#define InnerThrustKp .0001
-#define InnerThrustKi .0001
-#define InnerThrustKd .01
+#define InnerThrustKp .00001
+#define InnerThrustKi .0000001
+#define InnerThrustKd .0001
 //GPSNavigator constants
 
 #define	zAngleKp .0001

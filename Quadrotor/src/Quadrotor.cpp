@@ -25,7 +25,7 @@ pthread_t cppThread;
 int main() {
 	//cout << "Hello World" << endl; // prints
 	Sensors *sense = new Sensors;
-	Control *controller = new Control(sense);
+	Control *controller = new Control();
 	puts("In main"); /* prints Broked */
 //	sense->startSensorsThreads();
 //
@@ -75,13 +75,19 @@ int main() {
 //	sense->stopThread();
 
 	Remotehandler *remote = new Remotehandler();
-//	sense->startSensorsThreads();
+	sense->startSensorsThreads();
+	sleep(1);
+	controller->controlRun(sense);
 
-	while (1) {
-		printf("1: %f 2: %f 3: %f 4: %f\n", remote->getch1(),
-				remote->getch2(), remote->getch3(), remote->getch4());
-		usleep(500000);
-	}
+//	while (1) {
+////		printf("1: %f 2: %f 3: %f 4: %f\n", remote->getch1(),
+////				remote->getch2(), remote->getch3(), remote->getch4());
+//		printf("angle x: %f y: %f z: %f\nanglespeed x: %f y: %f z: %f\n",
+//				sense->getXAngle(), sense->getYAngle(), sense->getZAngle(),
+//				sense->getXAngleSpeed(), sense->getYAngleSpeed(),
+//				sense->getZAngleSpeed());
+//		usleep(500000);
+//	}
 
 	sleep(40);
 	return 0;

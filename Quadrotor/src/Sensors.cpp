@@ -15,13 +15,14 @@ Sensors::Sensors() {
 
 }
 void Sensors::startSensorsThreads() {
+
 	threadRunning = 1;
 	//start other sensor threads
 	imu = new IMU;
 	imu->startIMUThread();
 	usleep(100000);
 	comp = new Compass;
-	comp->startCompassThread();
+//	comp->startCompassThread();
 	usleep(100000);
 	gps = new GPS;
 //	gps->startGPSThread();

@@ -16,8 +16,9 @@ Compass::Compass() {
 
 void Compass::compassThread(void *obj) {
 	Compass *threadCompass = (Compass *) obj;
+	threadCompass->init();
 	while (threadCompass->getThreadRunning()) {
-		printf("Compass Running\n");
+//		printf("Compass Running\n");
 		usleep(500000);
 	}
 	//TODO: join the thread
@@ -48,6 +49,7 @@ void Compass::update() {
 
 	z = (this->compassInterface->getByte(compassFile, Z_MSB) << 8)
 			| this->compassInterface->getByte(compassFile, Z_LSB);
+//	printf("compass x %d y %d z %d\n", x, y, z);
 	return;
 }
 

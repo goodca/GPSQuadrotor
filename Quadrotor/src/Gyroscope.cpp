@@ -24,9 +24,9 @@ void Gyroscope::init() {
 	//Set internal clock to 1kHz with 42Hz LPF and Full Scale to 3 for proper operation
 	GyroInterface->writeByte(file, DLPF_FS,
 			DLPF_FS_SEL_0 | DLPF_FS_SEL_1 | DLPF_CFG_1 | DLPF_CFG_2);
-	printf("init lpf is: %x\n",
-			DLPF_FS_SEL_0 | DLPF_FS_SEL_1 | DLPF_CFG_1 | DLPF_CFG_2);
-	printf("After update: %x\n", GyroInterface->getByte(file, DLPF_FS));
+//	printf("init lpf is: %x\n",
+//			DLPF_FS_SEL_0 | DLPF_FS_SEL_1 | DLPF_CFG_1 | DLPF_CFG_2);
+//	printf("After update: %x\n", GyroInterface->getByte(file, DLPF_FS));
 //Set sample rate divider for 100 Hz operation
 	GyroInterface->writeByte(file, SMPLRT_DIV, 1); //Fsample = Fint / (divider + 1) where Fint is 1kHz
 

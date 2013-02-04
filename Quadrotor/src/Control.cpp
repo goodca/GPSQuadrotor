@@ -13,14 +13,12 @@
 #include "Remotehandler.h"
 #include <time.h>
 #include <unistd.h>
+#include <iostream>
 
 namespace std {
-Control::Control(Sensors * data) {
-
-	realData = data;
+Control::Control() {
 
 }
-
 
 void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 		double thrust) {
@@ -41,7 +39,7 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 	this->requestedXAngle = xAngle;
 	this->requestedYAngle = yAngle;
 	this->requestedZAngle = zAngle;
-	this->requestedThrust = thrust;
+	this->thrust = thrust;
 
 }
 
@@ -81,49 +79,74 @@ void Control::controlCycle() {
 	this->InnerZ->UpdateSetPoint(desiredRateZ);
 	angleFactorZ = this->InnerZ->UpdateOutput();
 
+	printf("xanglefactor %f\nyanglefactor %f\nzanglefactor %f\nthrust %f\n",
+			angleFactorX, angleFactorY, angleFactorZ, thrust);
+	printf("xangle %f\nyangle %f\nzangle %f\n", this->realData->getXAngle(),
+			this->realData->getYAngle(), this->realData->getZAngle());
+	printf("xanglefactor %f\nyanglefactor %f\nzanglefactor %f\nthrust %f\n",
+			angleFactorX, angleFactorY, angleFactorZ, thrust);
+	printf("Rxangle %f\nRyangle %f\nRzangle %f\nRThrust %f\n",
+			this->requestedXAngle, this->requestedYAngle, this->requestedZAngle,
+			this->requestedThrust);
+	printf("1: %f 2: %f 3: %f 4: %f\n", remotecontrol->getch1(),
+			remotecontrol->getch2(), remotecontrol->getch3(),
+			remotecontrol->getch4());
+
 	//motor stuff here
-	if ((this->thrust + angleFactorY - angleFactorX + angleFactorZ) < 100) {
-		this->Motor1->setPower(
-				this->thrust + angleFactorY - angleFactorX + angleFactorZ);
-	} else {
-		this->Motor1->setPower(100);
+	if (this->thrust> 20) {
+		if ((this->thrust + angleFactorY - angleFactorX + angleFactorZ) < 100) {
+			this->Motor1->setPower(
+					this->thrust + angleFactorY - angleFactorX + angleFactorZ);
+		} else {
+			this->Motor1->setPower(100);
 
-	}
-	if ((this->thrust + angleFactorY + angleFactorX - angleFactorZ) < 100) {
-		this->Motor2->setPower(
-				this->thrust + angleFactorY + angleFactorX - angleFactorZ);
-	} else {
-		this->Motor2->setPower(100);
+		}
+		if ((this->thrust + angleFactorY + angleFactorX - angleFactorZ) < 100) {
+			this->Motor2->setPower(
+					this->thrust + angleFactorY + angleFactorX - angleFactorZ);
+		} else {
+			this->Motor2->setPower(100);
 
-	}
-	if ((this->thrust - angleFactorY + angleFactorX + angleFactorZ) < 100) {
-		this->Motor3->setPower(
-				this->thrust - angleFactorY + angleFactorX + angleFactorZ);
-	} else {
-		this->Motor3->setPower(100);
+		}
+		if ((this->thrust - angleFactorY + angleFactorX + angleFactorZ) < 100) {
+			this->Motor3->setPower(
+					this->thrust - angleFactorY + angleFactorX + angleFactorZ);
+		} else {
+			this->Motor3->setPower(100);
 
-	}
-	if ((this->thrust - angleFactorY - angleFactorX - angleFactorZ) < 100) {
-		this->Motor4->setPower(
-				this->thrust - angleFactorY - angleFactorX - angleFactorZ);
-	} else {
-		this->Motor4->setPower(100);
+		}
+		if ((this->thrust - angleFactorY - angleFactorX - angleFactorZ) < 100) {
+			this->Motor4->setPower(
+					this->thrust - angleFactorY - angleFactorX - angleFactorZ);
+		} else {
+			this->Motor4->setPower(100);
 
+		}
+	} else {
+		this->Motor1->setPower(0);
+		this->Motor2->setPower(0);
+		this->Motor3->setPower(0);
+		this->Motor3->setPower(0);
 	}
 
 }
 
-void Control::controlRun() {
+void Control::controlRun(Sensors *sense) {
+	realData = sense;
+
+//	printf("xangle %f\nyangle %f\nzangle %f\n", this->realData->getXAngle(),
+//			this->realData->getYAngle(), this->realData->getYAngle());
 
 	this->controlStart();
+	this->remote = 1;
 
 	while (1) {
 		if (remote) {
 			this->updateRequestedAngle(this->remotecontrol->getch1() - 50,
 					this->remotecontrol->getch2() - 50,
-					this->remotecontrol->getch3(),
 					(this->remotecontrol->getch4() - 50) / 400
-							+ this->realData->getZAngle());
+							+ this->requestedZAngle,
+					this->remotecontrol->getch3());
 			this->controlCycle();
 			usleep(SleepTime);
 		} else {
@@ -168,8 +191,6 @@ void Control::UpdateRequestedVelocity(double Xspeed, double Yspeed,
 	this->requestedZvelocity = Zspeed;
 	this->requestedZAngle = zAngle;
 }
-
-
 
 void Control::controlStart() {
 

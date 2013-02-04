@@ -17,7 +17,7 @@ IMU::IMU() {
 void IMU::init() {
 	gyro = new Gyroscope;
 	acel = new Accelerometer;
-	comp = new Compass;
+//	comp = new Compass;
 	printf("Initializing gyro\n");
 	gyro->init();
 	gyro->update();
@@ -25,7 +25,7 @@ void IMU::init() {
 	acel->init();
 	acel->update();
 	printf("Initializing Compass\n");
-	comp->init();
+//	comp->init();
 
 	xGyroCorrection = 0;
 	yGyroCorrection = 0;
@@ -51,7 +51,7 @@ void IMU::update() {
 	clkDiv++;
 	gyro->update();
 	acel->update();
-	comp->update();
+//	comp->update();
 
 	xAcceleration = acel->getX();
 	yAcceleration = acel->getY();
@@ -83,11 +83,12 @@ void IMU::update() {
 	}
 
 	if (clkDiv > 50) {
-		printf("Corrected x: %f\n", getXAngle());
-		printf("Corrected y: %f\n", getYAngle());
-		printf("Corrected z: %f\n", getZAngle());
-		printf("Compass says %f degrees \n\n",
-				comp->getHeading(getXAngle(), getYAngle()));
+//		printf("Corrected x: %f\n", getXAngle());
+//		printf("Corrected y: %f\n", getYAngle());
+//		printf("Corrected z: %f\n", getZAngle());
+//		printf("Compass says %f degrees \n\n",
+////				comp->getHeading(getXAngle(), getYAngle()));
+//				comp->getHeading(0,0));
 		clkDiv += -50;
 	}
 	correctHeading();
@@ -148,8 +149,8 @@ void IMU::correctGyro() {
 	return;
 }
 void IMU::correctHeading() {
-	zGyroCorrection += (comp->getHeading(getXAngle(), getYAngle())
-			- (zGyroAngle + zGyroCorrection)) / COMPASS_FRACTION_TO_CORRECT;
+//	zGyroCorrection += (comp->getHeading(getXAngle(), getYAngle())
+//			- (zGyroAngle + zGyroCorrection)) / COMPASS_FRACTION_TO_CORRECT;
 	return;
 }
 void IMU::startIMUThread() {
