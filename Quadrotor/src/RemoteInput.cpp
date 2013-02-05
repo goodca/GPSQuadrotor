@@ -69,6 +69,7 @@ void RemoteInput::calculateTimeSincePulseStart() {
 	if ((timechange > MIN_LEGIT_PERIOD_US)
 			&& (timechange < MAX_LEGIT_PERIOD_US)) {
 		averagedPeriod += (timechange - averagedPeriod) / FRAC_SAMPLE_TO_AVERAGE;
+		fastAveragedPeriod += (timechange - fastAveragedPeriod) / SMALL_FRAC_SAMPLE_TO_AVERAGE;
 
 		if (averagedPeriod > this->maxTime) {
 			printf("timechange: %f maxtime was: %f\n", timechange, maxTime);

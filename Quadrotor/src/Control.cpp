@@ -25,10 +25,13 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 
 	if (xAngle > 35) {
 		xAngle = 35;
+	} else if (xAngle < -35) {
+		xAngle = -35;
 	}
-
 	if (yAngle > 35) {
 		yAngle = 35;
+	} else if (yAngle < -35) {
+		yAngle = -35;
 	}
 	if (thrust > 80) {
 
@@ -38,7 +41,7 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 
 	this->requestedXAngle = xAngle;
 	this->requestedYAngle = yAngle;
-	this->requestedZAngle = zAngle;
+	this->requestedZAngle = realData->getZAngle();
 	this->thrust = thrust;
 
 }
@@ -87,46 +90,52 @@ void Control::controlCycle() {
 			angleFactorX, angleFactorY, angleFactorZ, thrust);
 	printf("Rxangle %f\nRyangle %f\nRzangle %f\nRThrust %f\n",
 			this->requestedXAngle, this->requestedYAngle, this->requestedZAngle,
-			this->requestedThrust);
+			this->thrust);
 	printf("1: %f 2: %f 3: %f 4: %f\n", remotecontrol->getch1(),
 			remotecontrol->getch2(), remotecontrol->getch3(),
 			remotecontrol->getch4());
 
 	//motor stuff here
-	if (this->thrust> 20) {
+	if (this->thrust > 25) {
+		double thrust1 = 0;
+		double thrust2 = 0;
+		double thrust3 = 0;
+		double thrust4 = 0;
 		if ((this->thrust + angleFactorY - angleFactorX + angleFactorZ) < 100) {
-			this->Motor1->setPower(
-					this->thrust + angleFactorY - angleFactorX + angleFactorZ);
+			thrust1 = this->thrust + angleFactorY - angleFactorX + angleFactorZ;
+			this->Motor1->setPower(thrust1);
 		} else {
 			this->Motor1->setPower(100);
 
 		}
 		if ((this->thrust + angleFactorY + angleFactorX - angleFactorZ) < 100) {
-			this->Motor2->setPower(
-					this->thrust + angleFactorY + angleFactorX - angleFactorZ);
+			thrust2 = this->thrust + angleFactorY + angleFactorX - angleFactorZ;
+			this->Motor2->setPower(thrust2);
 		} else {
 			this->Motor2->setPower(100);
 
 		}
 		if ((this->thrust - angleFactorY + angleFactorX + angleFactorZ) < 100) {
-			this->Motor3->setPower(
-					this->thrust - angleFactorY + angleFactorX + angleFactorZ);
+			thrust3 = this->thrust - angleFactorY + angleFactorX + angleFactorZ;
+			this->Motor3->setPower(thrust3);
 		} else {
 			this->Motor3->setPower(100);
 
 		}
 		if ((this->thrust - angleFactorY - angleFactorX - angleFactorZ) < 100) {
-			this->Motor4->setPower(
-					this->thrust - angleFactorY - angleFactorX - angleFactorZ);
+			thrust4 = this->thrust - angleFactorY - angleFactorX - angleFactorZ;
+			this->Motor4->setPower(thrust4);
 		} else {
 			this->Motor4->setPower(100);
 
 		}
+		printf("Motor1: %f Motor2: %f Motor3: %f Motor4: %f\n", thrust1,
+				thrust2, thrust3, thrust4);
 	} else {
 		this->Motor1->setPower(0);
 		this->Motor2->setPower(0);
 		this->Motor3->setPower(0);
-		this->Motor3->setPower(0);
+		this->Motor4->setPower(0);
 	}
 
 }

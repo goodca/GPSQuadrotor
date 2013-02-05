@@ -40,28 +40,28 @@ int main() {
 //	motor4->init(4);
 //	sleep(5);
 //	int i;
-//	for (i = 0; i < 100; i++) {
+//	for (i = 0; i < 30; i++) {
 //		printf("iteration: %d\n", i);
 //		motor1->setPower(i);
-//		motor2->setPower(i);
-//		motor3->setPower(i);
-//		motor4->setPower(i);
+//		//motor2->setPower(i);
+//		//motor3->setPower(i);
+//		//motor4->setPower(i);
 //		usleep(50000);
 //	}
 //	motor1->setPower(0);
-//	for (i = 0; i < 100; i++) {
+//	for (i = 0; i < 30; i++) {
 //		printf("iteration: %d\n", i);
 //		motor2->setPower(i);
 //		usleep(50000);
 //	}
 //	motor2->setPower(0);
-//	for (i = 0; i < 100; i++) {
+//	for (i = 0; i < 30; i++) {
 //		printf("iteration: %d\n", i);
 //		motor3->setPower(i);
 //		usleep(50000);
 //	}
 //	motor3->setPower(0);
-//	for (i = 0; i < 100; i++) {
+//	for (i = 0; i < 30; i++) {
 //		printf("iteration: %d\n", i);
 //		motor4->setPower(i);
 //		usleep(50000);
@@ -74,7 +74,7 @@ int main() {
 
 //	sense->stopThread();
 
-	Remotehandler *remote = new Remotehandler();
+//	Remotehandler *remote = new Remotehandler();
 	sense->startSensorsThreads();
 	sleep(1);
 	controller->controlRun(sense);

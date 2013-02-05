@@ -33,6 +33,7 @@ private:
 	double minTime;
 	double maxTime;
 	double averagedPeriod;
+	double fastAveragedPeriod;
 	pthread_t remoteThread_t;
 
 	int channel;
@@ -61,6 +62,7 @@ private:
 #define MAX_LEGIT_PERIOD_US 2100
 #define MIDDLE_PERIOD_US 1500
 #define FRAC_SAMPLE_TO_AVERAGE 25
+#define SMALL_FRAC_SAMPLE_TO_AVERAGE 5
 #define GPIO1 38
 #define GPIO2 39
 #define GPIO3 34
