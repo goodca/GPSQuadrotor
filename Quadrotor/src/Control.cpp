@@ -41,7 +41,7 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 
 	this->requestedXAngle = xAngle;
 	this->requestedYAngle = yAngle;
-	this->requestedZAngle = realData->getZAngle();
+	this->requestedZAngle = zAngle;
 	this->thrust = thrust;
 
 }
@@ -101,11 +101,12 @@ void Control::controlCycle() {
 			remotecontrol->getch4());
 
 	//motor stuff here
+	double thrust1 = 0;
+	double thrust2 = 0;
+	double thrust3 = 0;
+	double thrust4 = 0;
 	if (this->thrust > 25) {
-		double thrust1 = 0;
-		double thrust2 = 0;
-		double thrust3 = 0;
-		double thrust4 = 0;
+
 		if ((this->thrust + angleFactorY - angleFactorX + angleFactorZ) < 100) {
 			thrust1 = this->thrust + angleFactorY - angleFactorX + angleFactorZ;
 			this->Motor1->setPower(thrust1);
@@ -137,6 +138,12 @@ void Control::controlCycle() {
 		printf("Motor1: %f Motor2: %f Motor3: %f Motor4: %f\n", thrust1,
 				thrust2, thrust3, thrust4);
 	} else {
+		thrust1 = this->thrust + angleFactorY - angleFactorX + angleFactorZ;
+		thrust2 = this->thrust + angleFactorY + angleFactorX - angleFactorZ;
+		thrust3 = this->thrust - angleFactorY + angleFactorX + angleFactorZ;
+		thrust4 = this->thrust - angleFactorY - angleFactorX - angleFactorZ;
+		printf("Motor1: %f Motor2: %f Motor3: %f Motor4: %f\n", thrust1,
+						thrust2, thrust3, thrust4);
 		this->Motor1->setPower(0);
 		this->Motor2->setPower(0);
 		this->Motor3->setPower(0);
@@ -158,8 +165,7 @@ void Control::controlRun(Sensors *sense) {
 		if (remote) {
 			this->updateRequestedAngle(this->remotecontrol->getch1() - 50,
 					this->remotecontrol->getch2() - 50,
-					(this->remotecontrol->getch4() - 50) / 400
-							+ this->requestedZAngle,
+					(this->remotecontrol->getch4() - 50)/200 + this->requestedZAngle,
 					this->remotecontrol->getch3());
 			this->controlCycle();
 			usleep(SleepTime);

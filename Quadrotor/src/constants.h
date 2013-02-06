@@ -12,19 +12,19 @@
 #define SleepTime 25000
 
 #define OuterXKp .23
-#define OuterXKi 0
+#define OuterXKi .00001
 #define OuterXKd 0
 
-#define InnerXKp .23
-#define InnerXKi 0
+#define InnerXKp .12
+#define InnerXKi .0000003
 #define InnerXKd 0
 
 #define OuterYKp .23
-#define OuterYKi 0
+#define OuterYKi .00001
 #define OuterYKd 0
 
-#define InnerYKp .23
-#define InnerYKi 0
+#define InnerYKp .12
+#define InnerYKi .0000003
 #define InnerYKd 0
 
 #define OuterZKp 0
