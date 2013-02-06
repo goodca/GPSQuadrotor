@@ -12,7 +12,6 @@ class Waypoint {
 public:
 	Waypoint();
 	virtual ~Waypoint();
-	void nextWaypoint();
 	double getRequestedLongtitude();			//in degrees
 	double getRequestedLatitude();				//in degrees
 	double getReqestedVelocity();				//in m/s

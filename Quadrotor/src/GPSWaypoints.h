@@ -17,7 +17,7 @@ class GPSWaypoints {
 public:
 	GPSWaypoints();
 	virtual ~GPSWaypoints();
-	Waypoint getNextWaypoint;
+	Waypoint* getNextWaypoint();
 };
 
 } /* namespace std */

@@ -84,8 +84,13 @@ void Control::controlCycle() {
 
 	printf("xanglefactor %f\nyanglefactor %f\nzanglefactor %f\nthrust %f\n",
 			angleFactorX, angleFactorY, angleFactorZ, thrust);
-	printf("xangle %f\nyangle %f\nzangle %f\n", this->realData->getXAngle(),
-			this->realData->getYAngle(), this->realData->getZAngle());
+	printf("xangle %f\nyangle %f\nzangle %f\nheight %f\nLat: %f Long: %f\n",
+			this->realData->getXAngle(), this->realData->getYAngle(),
+			this->realData->getZAngle(), realData->getRelativeHeight(),
+			realData->getLatitude(), realData->getLongtitude());
+	printf("xanglespeed %f\nyanglespeed %f\nzanglespeed %f\nheight %f\nLat: %f Long: %f\n",
+				this->realData->getXAngleSpeed(), this->realData->getYAngleSpeed(),
+				this->realData->getZAngleSpeed());
 	printf("xanglefactor %f\nyanglefactor %f\nzanglefactor %f\nthrust %f\n",
 			angleFactorX, angleFactorY, angleFactorZ, thrust);
 	printf("Rxangle %f\nRyangle %f\nRzangle %f\nRThrust %f\n",

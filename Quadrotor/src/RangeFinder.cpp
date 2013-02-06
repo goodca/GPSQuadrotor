@@ -97,6 +97,7 @@ void RangeFinder::calculateTimeSincePulseStart() {
 	double timechange = (1000000 * this->endtime.tv_sec + this->endtime.tv_usec)
 			- (1000000 * this->starttime.tv_sec + this->starttime.tv_usec);
 	inches = timechange / US_PER_INCH;
+	meters = inches * 0.0254;
 
 }
 int RangeFinder::gpio_fd_open() {

@@ -115,13 +115,13 @@ double IMU::getZVelocity() {
 }
 
 double IMU::getXAngleSpeed() {
-	return xAngleAcceleration;
+	return xAngleVelocity;
 }
 double IMU::getYAngleSpeed() {
-	return yAngleAcceleration;
+	return yAngleVelocity;
 }
 double IMU::getZAngleSpeed() {
-	return zAngleAcceleration;
+	return zAngleVelocity;
 }
 double IMU::getXAngle() {
 	return xGyroAngle + xGyroCorrection;

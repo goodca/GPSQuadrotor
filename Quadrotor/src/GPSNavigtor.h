@@ -8,6 +8,7 @@
 #ifndef GPSNAVIGTOR_H_
 #define GPSNAVIGTOR_H_
 #include "Waypoint.h"
+#include "GPSWaypoints.h"
 #include "Control.h"
 
 #include "PID.h"
@@ -17,6 +18,8 @@ namespace std {
 class GPSNavigtor {
 
 	Control *QuadControl;
+
+	GPSWaypoints *GPSCords;
 
 	Waypoint *requestedLocation;
 

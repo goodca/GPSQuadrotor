@@ -121,10 +121,10 @@ void GPS::getCalculateLine() {
 		latitude = (int) tempy / 100
 				+ ((int) tempy % 100 + tempy - (int) tempy) / 60.0;
 
-		printf(
-				"CORRECTED FORM\nLatitude: %f, Longtitude: %f\nSpeed in knots: %f course: %f\nSpeed in mph: %f\n",
-				latitude, longtitude, speedKnots, courseOverGround,
-				speedKnots * 1.151);
+//		printf(
+//				"CORRECTED FORM\nLatitude: %f, Longtitude: %f\nSpeed in knots: %f course: %f\nSpeed in mph: %f\n",
+//				latitude, longtitude, speedKnots, courseOverGround,
+//				speedKnots * 1.151);
 	}
 }
 

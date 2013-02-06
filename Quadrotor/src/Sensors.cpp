@@ -25,7 +25,7 @@ void Sensors::startSensorsThreads() {
 //	comp->startCompassThread();
 	usleep(100000);
 	gps = new GPS;
-//	gps->startGPSThread();
+	gps->startGPSThread();
 	usleep(100000);
 	range = new RangeFinder;
 	range->start();

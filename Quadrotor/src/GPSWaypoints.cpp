@@ -7,10 +7,18 @@
 
 #include "GPSWaypoints.h"
 
+
 namespace std {
 
 GPSWaypoints::GPSWaypoints() {
 	// TODO Auto-generated constructor stub
+
+}
+
+Waypoint* GPSWaypoints::getNextWaypoint(){
+		Waypoint * changethis=new Waypoint();
+		return changethis;
+
 
 }
 

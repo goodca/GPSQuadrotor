@@ -11,29 +11,29 @@
 //control constants
 #define SleepTime 25000
 
-#define OuterXKp .7
-#define OuterXKi .00000001
-#define OuterXKd .005
+#define OuterXKp .23
+#define OuterXKi 0
+#define OuterXKd 0
 
-#define InnerXKp .7
-#define InnerXKi .0000000001
-#define InnerXKd .005
+#define InnerXKp .23
+#define InnerXKi 0
+#define InnerXKd 0
 
-#define OuterYKp .7
-#define OuterYKi .00000001
-#define OuterYKd .005
+#define OuterYKp .23
+#define OuterYKi 0
+#define OuterYKd 0
 
-#define InnerYKp .7
-#define InnerYKi .0000000001
-#define InnerYKd .005
+#define InnerYKp .23
+#define InnerYKi 0
+#define InnerYKd 0
 
-#define OuterZKp .7
-#define OuterZKi .00000001
-#define OuterZKd .005
+#define OuterZKp 0
+#define OuterZKi 0
+#define OuterZKd 0
 
-#define InnerZKp .7
-#define InnerZKi .0000000001
-#define InnerZKd .005
+#define InnerZKp 0
+#define InnerZKi 0
+#define InnerZKd 0
 
 #define OuterThrustKp .00001
 #define OuterThrustKi .0000001
