@@ -56,6 +56,7 @@ void Control::controlCycle() {
 	this->OuterX->UpdateSetPoint(this->requestedXAngle);
 	desiredRateX = this->OuterX->UpdateOutput();
 
+
 	this->InnerX->UpdateActualValue(this->realData->getXAngleSpeed());
 	this->InnerX->UpdateSetPoint(desiredRateX);
 	angleFactorX = this->InnerX->UpdateOutput();
@@ -66,6 +67,9 @@ void Control::controlCycle() {
 	this->OuterY->UpdateActualValue(this->realData->getYAngle());
 	this->OuterY->UpdateSetPoint(this->requestedYAngle);
 	desiredRateY = this->OuterY->UpdateOutput();
+
+	fprintf(angleSpeedFile, "%f\t%f\t%f\t%f\n", desiredRateY, realData->getYAngleSpeed(), requestedYAngle, realData->getYAngle() );
+
 
 	this->InnerY->UpdateActualValue(this->realData->getYAngleSpeed());
 	this->InnerY->UpdateSetPoint(desiredRateY);
@@ -157,6 +161,7 @@ void Control::controlRun(Sensors *sense) {
 
 //	printf("xangle %f\nyangle %f\nzangle %f\n", this->realData->getXAngle(),
 //			this->realData->getYAngle(), this->realData->getYAngle());
+	angleSpeedFile = fopen("angleSpeed.txt", "w");
 
 	this->controlStart();
 	this->remote = 1;

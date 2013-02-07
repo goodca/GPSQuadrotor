@@ -19,6 +19,7 @@ class Control {
 
 private:
 	int remote;
+	FILE *angleSpeedFile;
 
 	double thrust;
 
