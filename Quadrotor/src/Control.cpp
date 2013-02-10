@@ -172,7 +172,15 @@ void Control::controlRun(Sensors *sense) {
 					this->remotecontrol->getch2() - 50,
 					(this->remotecontrol->getch4() - 50)/200 + this->requestedZAngle,
 					this->remotecontrol->getch3());
+
+			if(this->thrust<25){
+				this->Motor1->setPower(0);
+				this->Motor2->setPower(0);
+				this->Motor3->setPower(0);
+				this->Motor4->setPower(0);
+			}else{
 			this->controlCycle();
+			}
 			usleep(SleepTime);
 		} else {
 
