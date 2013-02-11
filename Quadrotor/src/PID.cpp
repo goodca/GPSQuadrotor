@@ -24,6 +24,12 @@ PID::PID(double setPoint0, double actualValue0, double previousError0,
 
 }
 
+void PID::ChangePID(double Kp, double Ki, double Kd){
+		this->Kp=Kp;
+		this->Ki=Ki;
+		this->Kd=Kd;
+}
+
 double PID::UpdateOutput() {
 
 	double error = setPoint - actualValue; //sets error
@@ -33,11 +39,11 @@ double PID::UpdateOutput() {
 	timestart.tv_sec = end.tv_sec;
 	timestart.tv_usec = end.tv_usec;//sets the start time for the next cycle to the end time of this cycle
 	integral = integral + error * timechange; //calculates the integral amount
-//	if(Ki * integral>20){
-//		integral=20/Ki;
-//	}else if(Ki * integral<-20){
-//		integral=-20/Ki;
-//	}
+	if(Ki * integral>20){
+		integral=20/Ki;
+	}else if(Ki * integral<-20){
+		integral=-20/Ki;
+	}
 	double derivitive = (error - previousError) / timechange; //calculates the derivative
 	output = Kp * error + Ki * integral + Kd * derivitive; //adds up everything to create the output
 	previousError = error; //sets the error for the next cycle

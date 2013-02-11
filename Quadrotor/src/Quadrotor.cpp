@@ -76,7 +76,7 @@ int main() {
 
 //	Remotehandler *remote = new Remotehandler();
 	sense->startSensorsThreads();
-	sleep(1);
+	usleep(500000);
 	controller->controlRun(sense);
 
 //	while (1) {

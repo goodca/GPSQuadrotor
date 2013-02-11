@@ -19,11 +19,11 @@
 #define InnerXKi 0
 #define InnerXKd 0
 
-#define OuterYKp 1//.38
+#define OuterYKp 0//.38
 #define OuterYKi 0//.000039
 #define OuterYKd 0
 
-#define InnerYKp .3
+#define InnerYKp 0
 #define InnerYKi 0
 #define InnerYKd 0
 

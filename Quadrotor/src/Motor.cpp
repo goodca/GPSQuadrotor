@@ -12,7 +12,7 @@ Motor::Motor() {
 }
 void Motor::init(int motorNumber) {
 	motorNum = motorNumber;
-	if (motorNumber == 2) {
+	if (motorNumber == 1) {
 		//GPIO2_6 mode3 lcd_data0 = ehrpwm.2:0
 
 		set_mux_value("lcd_data0", 3);
@@ -20,7 +20,7 @@ void Motor::init(int motorNumber) {
 //motorName	= ['e', 'h', 'r', 'p', 'w', 'm', '.', '2', '\', ':', '0'];
 		motorChan = ":0";
 
-	} else if (motorNumber == 1) {
+	} else if (motorNumber == 2) {
 		//GPIO2_7 mode3 lcd_data1 = ehrpwm.2:1
 		set_mux_value("lcd_data1", 3);
 		motorName = "ehrpwm.2";

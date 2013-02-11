@@ -33,6 +33,8 @@ public:
 
 	void UpdateSetPoint(double setPoint0);
 
+	void ChangePID(double Kp, double Ki, double Kd);
+
 	virtual ~PID();
 };
 

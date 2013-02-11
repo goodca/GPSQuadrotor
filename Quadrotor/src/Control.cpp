@@ -40,7 +40,7 @@ void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 	}
 
 	this->requestedXAngle = xAngle;
-	this->requestedYAngle = yAngle;
+	this->requestedYAngle = 0;
 	this->requestedZAngle = zAngle;
 	this->thrust = thrust;
 
@@ -68,12 +68,14 @@ void Control::controlCycle() {
 	this->OuterY->UpdateSetPoint(this->requestedYAngle);
 	desiredRateY = this->OuterY->UpdateOutput();
 
-	fprintf(angleSpeedFile, "%f\t%f\t%f\t%f\n", desiredRateY, realData->getYAngleSpeed(), requestedYAngle, realData->getYAngle() );
+
 
 
 	this->InnerY->UpdateActualValue(this->realData->getYAngleSpeed());
 	this->InnerY->UpdateSetPoint(desiredRateY);
 	angleFactorY = this->InnerY->UpdateOutput();
+
+	fprintf(angleSpeedFile, "%f\t%f\t%f\t%f\t%f\n", desiredRateY, realData->getYAngleSpeed(), requestedYAngle, realData->getYAngle(), angleFactorY);
 
 	double desiredRateZ;
 	double angleFactorZ;
@@ -162,11 +164,47 @@ void Control::controlRun(Sensors *sense) {
 //	printf("xangle %f\nyangle %f\nzangle %f\n", this->realData->getXAngle(),
 //			this->realData->getYAngle(), this->realData->getYAngle());
 	angleSpeedFile = fopen("angleSpeed.txt", "w");
+	PIDFile = fopen("PID.txt", "r");
+	int i=0;
 
 	this->controlStart();
 	this->remote = 1;
 
 	while (1) {
+
+		if(i>=40){
+			PIDFile = fopen("PID.txt", "r");
+			double P,I,D;
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("XInner %f %f %f\n",P,I,D);
+			this->InnerX->ChangePID(P,I,D);
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("XOuter %f %f %f\n",P,I,D);
+			this->OuterX->ChangePID(P,I,D);
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("YInner %f %f %f\n",P,I,D);
+			this->InnerY->ChangePID(P,I,D);
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("YOuter %f %f %f\n",P,I,D);
+			this->OuterY->ChangePID(P,I,D);
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("ZInner %f %f %f\n",P,I,D);
+			this->InnerZ->ChangePID(P,I,D);
+
+			fscanf(PIDFile, "%lf %lf %lf\n", &P,&I,&D);
+			printf("ZOuter %f %f %f\n",P,I,D);
+			this->OuterZ->ChangePID(P,I,D);
+
+			fclose(PIDFile);
+			i=0;
+		}else{
+			i++;
+		}
 		if (remote) {
 			this->updateRequestedAngle(this->remotecontrol->getch1() - 50,
 					this->remotecontrol->getch2() - 50,
