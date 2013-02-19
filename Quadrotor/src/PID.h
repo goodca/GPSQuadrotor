@@ -35,6 +35,8 @@ public:
 
 	void ChangePID(double Kp, double Ki, double Kd);
 
+	double getIntegral();
+
 	virtual ~PID();
 };
 

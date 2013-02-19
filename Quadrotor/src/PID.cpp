@@ -29,6 +29,9 @@ void PID::ChangePID(double Kp, double Ki, double Kd){
 		this->Ki=Ki;
 		this->Kd=Kd;
 }
+double PID::getIntegral(){
+	return integral;
+}
 
 double PID::UpdateOutput() {
 
@@ -44,6 +47,7 @@ double PID::UpdateOutput() {
 	}else if(Ki * integral<-20){
 		integral=-20/Ki;
 	}
+
 	double derivitive = (error - previousError) / timechange; //calculates the derivative
 	output = Kp * error + Ki * integral + Kd * derivitive; //adds up everything to create the output
 	previousError = error; //sets the error for the next cycle

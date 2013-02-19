@@ -23,15 +23,15 @@ Control::Control() {
 void Control::updateRequestedAngle(double xAngle, double yAngle, double zAngle,
 		double thrust) {
 
-	if (xAngle > 35) {
-		xAngle = 35;
-	} else if (xAngle < -35) {
-		xAngle = -35;
+	if (xAngle > 15) {
+		xAngle = 15;
+	} else if (xAngle < -15) {
+		xAngle = -15;
 	}
-	if (yAngle > 35) {
-		yAngle = 35;
-	} else if (yAngle < -35) {
-		yAngle = -35;
+	if (yAngle > 15) {
+		yAngle = 15;
+	} else if (yAngle < -15) {
+		yAngle = -15;
 	}
 	if (thrust > 80) {
 
@@ -75,7 +75,7 @@ void Control::controlCycle() {
 	this->InnerY->UpdateSetPoint(desiredRateY);
 	angleFactorY = this->InnerY->UpdateOutput();
 
-	fprintf(angleSpeedFile, "%f\t%f\t%f\t%f\t%f\n", desiredRateY, realData->getYAngleSpeed(), requestedYAngle, realData->getYAngle(), angleFactorY);
+	fprintf(angleSpeedFile, "%f\t%f\t%f\t%f\t%f\t%f\n", desiredRateY, realData->getYAngleSpeed(), requestedYAngle, realData->getYAngle(), angleFactorY, InnerY->getIntegral());
 
 	double desiredRateZ;
 	double angleFactorZ;
